@@ -1,0 +1,160 @@
+{
+  "app": {
+    "title": "Guendlkofen Portal"
+  },
+  "common": {
+    "loading": "Loading…",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "remove": "Remove",
+    "add": "Add",
+    "confirm": "Confirm",
+    "back": "Back",
+    "retry": "Retry",
+    "actions": "Actions",
+    "none": "None",
+    "optional": "optional"
+  },
+  "errors": {
+    "loadFailed": "Failed to load",
+    "genericTitle": "Error",
+    "generic": "Something went wrong. Please try again.",
+    "conflict": "This value is already taken or conflicts with existing data."
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "redirecting": "Redirecting to login…",
+    "account": "Account"
+  },
+  "language": {
+    "label": "Language",
+    "de": "Deutsch",
+    "en": "English"
+  },
+  "clubs": {
+    "title": "Clubs",
+    "empty": "You don't have access to any club yet.",
+    "createButton": "Create club",
+    "createTitle": "Create a new club",
+    "nameLabel": "Name",
+    "namePlaceholder": "Club name",
+    "created": "Club created",
+    "deleteTitle": "Delete club",
+    "deleteConfirm": "Do you really want to delete the club \"{{name}}\"? This cannot be undone.",
+    "deleted": "Club deleted",
+    "open": "Open"
+  },
+  "club": {
+    "notFound": "Club not found.",
+    "tabs": {
+      "teams": "Teams",
+      "members": "Members",
+      "invitations": "Invitations"
+    }
+  },
+  "teams": {
+    "title": "Teams",
+    "empty": "No teams yet.",
+    "name": "Name",
+    "sport": "Sport",
+    "league": "League",
+    "rank": "Rank",
+    "createButton": "Create team",
+    "createTitle": "New team",
+    "editTitle": "Edit team",
+    "namePlaceholder": "e.g. Men's 1",
+    "sportPlaceholder": "e.g. Football",
+    "leaguePlaceholder": "e.g. District league",
+    "created": "Team created",
+    "updated": "Team updated",
+    "deleteTitle": "Delete team",
+    "deleteConfirm": "Do you really want to delete the team \"{{name}}\"?",
+    "deleted": "Team deleted",
+    "rankConflict": "That rank is already taken for this sport.",
+    "open": "Open"
+  },
+  "members": {
+    "title": "Members",
+    "empty": "No members yet.",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "unnamed": "Unnamed",
+    "roleUpdated": "Role updated",
+    "removeTitle": "Remove member",
+    "removeConfirm": "Do you really want to remove {{name}} from the club?",
+    "removed": "Member removed",
+    "roles": {
+      "CLUB_ADMIN": "Club admin",
+      "MEMBER": "Member"
+    }
+  },
+  "invitations": {
+    "title": "Invitations",
+    "empty": "No invitations sent yet.",
+    "email": "Email",
+    "clubRole": "Club role",
+    "status": "Status",
+    "expiresAt": "Expires",
+    "invitedBy": "Invited by",
+    "teamAssignments": "Teams",
+    "inviteButton": "Invite member",
+    "inviteTitle": "Invite member",
+    "emailPlaceholder": "person@example.com",
+    "teamAssignmentsLabel": "Pre-assign teams",
+    "teamAssignmentsPlaceholder": "Select teams",
+    "teamRole": "Role in {{team}}",
+    "sent": "Invitation sent",
+    "revokeTitle": "Revoke invitation",
+    "revokeConfirm": "Do you want to revoke the invitation to {{email}}?",
+    "revoked": "Invitation revoked",
+    "revoke": "Revoke",
+    "statuses": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "REVOKED": "Revoked"
+    }
+  },
+  "teamRoles": {
+    "TEAM_ADMIN": "Team admin",
+    "PLAYER": "Player"
+  },
+  "team": {
+    "notFound": "Team not found.",
+    "membersTitle": "Team members",
+    "empty": "No members in this team yet.",
+    "addButton": "Add member",
+    "addTitle": "Add member",
+    "selectMember": "Select a club member",
+    "noEligible": "All club members are already in this team.",
+    "added": "Member added",
+    "roleUpdated": "Role updated",
+    "removeTitle": "Remove member",
+    "removeConfirm": "Do you really want to remove {{name}} from the team?",
+    "removed": "Member removed"
+  },
+  "invite": {
+    "loading": "Checking invitation…",
+    "invalidTitle": "Invitation invalid",
+    "invalid": "This invitation could not be found.",
+    "validTitle": "Invitation to {{club}}",
+    "validText": "You have been invited to join the club \"{{club}}\".",
+    "maskedEmail": "Invited: {{email}}",
+    "loginToJoin": "Log in to join",
+    "joining": "Finishing your join…",
+    "successTitle": "Welcome to {{club}}!",
+    "successText": "You have joined the club. Open the player app to get started.",
+    "openPlayerApp": "Open player app",
+    "expiredTitle": "Invitation expired",
+    "expired": "Unfortunately this invitation has expired. Please ask the club for a new one.",
+    "revokedTitle": "Invitation revoked",
+    "revoked": "This invitation has been revoked and is no longer valid.",
+    "acceptedTitle": "Already accepted",
+    "accepted": "This invitation has already been accepted.",
+    "redeemFailed": "We could not complete your join."
+  }
+}

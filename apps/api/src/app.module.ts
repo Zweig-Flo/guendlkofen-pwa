@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
 import { ClubsModule } from './clubs/clubs.module';
+import { InvitationsModule } from './invitations/invitations.module';
 import { MembershipsModule } from './memberships/memberships.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { TeamsModule } from './teams/teams.module';
@@ -18,6 +19,7 @@ import { TeamsModule } from './teams/teams.module';
     ClubsModule,
     TeamsModule,
     MembershipsModule,
+    InvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

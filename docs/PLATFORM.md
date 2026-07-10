@@ -10,7 +10,7 @@ whether they can play.
 | Workspace     | What                                                                                  |
 | ------------- | ------------------------------------------------------------------------------------- |
 | `apps/web`    | Mobile-first **PWA** for players (no app stores). Teams, planner voting, team chat.   |
-| `apps/portal` | Desktop-first **managing portal** (to be created). Clubs, teams, members, roles, imports. |
+| `apps/portal` | Desktop-first **managing portal** (Mantine 8, TypeScript, port 5174; exists now). Clubs, teams, members, roles, imports. |
 | `apps/api`    | NestJS backend. Auth0, Prisma/Postgres, CASL, Swagger-generated clients.              |
 
 ## Domain model
@@ -25,7 +25,12 @@ whether they can play.
   manually or via CSV import.
 - **Vote** — user × event → `YES | NO` (deliberately no "maybe"). Unique per user+event.
 - **Invitation** — email invite into a club, optionally pre-assigned to teams/roles.
-  Accepting links the Auth0 signup to the memberships.
+  Carries a `token` emailed to the invitee via **Resend**; redeeming the token links the
+  logged-in user's memberships (club + any pre-assigned teams). There is **no email-match
+  policy** — whoever holds the token can redeem it, regardless of which email they signed
+  up with.
+- **InvitationTeamAssignment** — join row on an Invitation pre-assigning the invitee to a
+  specific team with a `TeamRole`; applied as TeamMemberships on redeem.
 - **ChatMessage** — per-team chat. Encrypted **at rest** + TLS in transit (deliberate
   decision: no end-to-end encryption).
 - **HelpRequest** — a team admin asks a **lower-ranked team of the same sport in the same
@@ -91,3 +96,5 @@ Rule of thumb: a role can grant its own level to others within its scope.
 | Permissions                    | CASL                                      | Fine-grained, works on API + can share to UI |
 | API client                     | Orval (OpenAPI → React Query hooks)       | Generated hooks, no hand-written fetchers  |
 | Languages                      | de (primary), en; extensible              | German club, international later           |
+| Portal UI framework            | Mantine 8 (portal now; PWA adopts it in milestone 3) | One component system shared across both apps |
+| Transactional email            | Resend (console fallback in dev)          | Invites/help requests; logs link when no API key set |

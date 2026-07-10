@@ -952,6 +952,228 @@
           "team-members"
         ]
       }
+    },
+    "/clubs/{clubId}/invitations": {
+      "get": {
+        "operationId": "ClubInvitationsController_findAll",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InvitationDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "invitations"
+        ]
+      },
+      "post": {
+        "operationId": "ClubInvitationsController_create",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvitationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/clubs/{clubId}/invitations/{invitationId}": {
+      "delete": {
+        "operationId": "ClubInvitationsController_revoke",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "invitationId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/invitations/preview": {
+      "get": {
+        "description": "Returns just enough to render the acceptance landing page: the club name, a masked email and a computed status. Never returns any ids or the token.",
+        "operationId": "InvitationsController_preview",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitationPreviewDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Preview an invitation by token (no login required)",
+        "tags": [
+          "invitations"
+        ]
+      }
+    },
+    "/invitations/redeem": {
+      "post": {
+        "description": "Accepts the invitation for the currently authenticated user. The logged-in account does NOT need to match the invited email address — the invitee may sign up with a different address. Creates/upgrades the club membership and any pre-assigned team memberships.",
+        "operationId": "InvitationsController_redeem",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedeemInvitationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Redeem an invitation",
+        "tags": [
+          "invitations"
+        ]
+      }
     }
   },
   "info": {
@@ -1371,6 +1593,202 @@
         },
         "required": [
           "role"
+        ]
+      },
+      "InvitationTeamAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "description": "Id of the assigned team",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "teamName": {
+            "type": "string",
+            "description": "Name of the assigned team",
+            "example": "Herren 1"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role the invitee will get in the team",
+            "enum": [
+              "TEAM_ADMIN",
+              "PLAYER"
+            ],
+            "example": "PLAYER"
+          }
+        },
+        "required": [
+          "teamId",
+          "teamName",
+          "role"
+        ]
+      },
+      "InvitationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Invitation id",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "clubId": {
+            "type": "string",
+            "description": "Id of the club",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "email": {
+            "type": "string",
+            "description": "Invited email address",
+            "example": "newplayer@example.com"
+          },
+          "clubRole": {
+            "type": "string",
+            "description": "Role the invitee will get in the club",
+            "enum": [
+              "CLUB_ADMIN",
+              "MEMBER"
+            ],
+            "example": "MEMBER"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the invitation",
+            "enum": [
+              "PENDING",
+              "ACCEPTED",
+              "REVOKED"
+            ],
+            "example": "PENDING"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the invitation expires",
+            "example": "2026-07-24T20:11:00.000Z"
+          },
+          "invitedBy": {
+            "description": "The user who sent the invitation (null if that account was deleted)",
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberUserDto"
+              }
+            ]
+          },
+          "teamAssignments": {
+            "description": "Pre-assigned team memberships",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvitationTeamAssignmentDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "clubId",
+          "email",
+          "clubRole",
+          "status",
+          "expiresAt",
+          "invitedBy",
+          "teamAssignments"
+        ]
+      },
+      "CreateInvitationTeamAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "description": "Id of a team of this club to pre-assign the invitee to",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role within the team (defaults to PLAYER)",
+            "enum": [
+              "TEAM_ADMIN",
+              "PLAYER"
+            ],
+            "default": "PLAYER"
+          }
+        },
+        "required": [
+          "teamId"
+        ]
+      },
+      "CreateInvitationDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address to invite into the club",
+            "example": "newplayer@example.com"
+          },
+          "clubRole": {
+            "type": "string",
+            "description": "Role within the club (defaults to MEMBER)",
+            "enum": [
+              "CLUB_ADMIN",
+              "MEMBER"
+            ],
+            "default": "MEMBER"
+          },
+          "teamAssignments": {
+            "description": "Teams of this club to pre-assign the invitee to",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInvitationTeamAssignmentDto"
+            }
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "InvitationPreviewDto": {
+        "type": "object",
+        "properties": {
+          "clubName": {
+            "type": "string",
+            "description": "Name of the inviting club",
+            "example": "TC Guendlkofen"
+          },
+          "maskedEmail": {
+            "type": "string",
+            "description": "Masked invited email (e.g. f***@e***.com)",
+            "example": "n***@e***.com"
+          },
+          "status": {
+            "type": "string",
+            "description": "Computed status: 'valid' (PENDING, not expired), 'expired' (PENDING but past expiry), 'revoked', or 'accepted'",
+            "enum": [
+              "valid",
+              "expired",
+              "revoked",
+              "accepted"
+            ],
+            "example": "valid"
+          }
+        },
+        "required": [
+          "clubName",
+          "maskedEmail",
+          "status"
+        ]
+      },
+      "RedeemInvitationDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The invitation token from the acceptance link",
+            "example": "a1b2c3d4e5f6..."
+          }
+        },
+        "required": [
+          "token"
         ]
       }
     }

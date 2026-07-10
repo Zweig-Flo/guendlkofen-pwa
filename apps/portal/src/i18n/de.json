@@ -1,0 +1,160 @@
+{
+  "app": {
+    "title": "Guendlkofen Portal"
+  },
+  "common": {
+    "loading": "Wird geladen…",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "create": "Erstellen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "remove": "Entfernen",
+    "add": "Hinzufügen",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "retry": "Erneut versuchen",
+    "actions": "Aktionen",
+    "none": "Keine",
+    "optional": "optional"
+  },
+  "errors": {
+    "loadFailed": "Laden fehlgeschlagen",
+    "genericTitle": "Fehler",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "conflict": "Dieser Wert ist bereits vergeben oder steht in Konflikt mit vorhandenen Daten."
+  },
+  "auth": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "redirecting": "Weiterleitung zur Anmeldung…",
+    "account": "Konto"
+  },
+  "language": {
+    "label": "Sprache",
+    "de": "Deutsch",
+    "en": "English"
+  },
+  "clubs": {
+    "title": "Vereine",
+    "empty": "Du hast noch keinen Zugriff auf einen Verein.",
+    "createButton": "Verein erstellen",
+    "createTitle": "Neuen Verein erstellen",
+    "nameLabel": "Name",
+    "namePlaceholder": "Vereinsname",
+    "created": "Verein erstellt",
+    "deleteTitle": "Verein löschen",
+    "deleteConfirm": "Möchtest du den Verein \"{{name}}\" wirklich löschen? Dies kann nicht rückgängig gemacht werden.",
+    "deleted": "Verein gelöscht",
+    "open": "Öffnen"
+  },
+  "club": {
+    "notFound": "Verein nicht gefunden.",
+    "tabs": {
+      "teams": "Mannschaften",
+      "members": "Mitglieder",
+      "invitations": "Einladungen"
+    }
+  },
+  "teams": {
+    "title": "Mannschaften",
+    "empty": "Noch keine Mannschaften angelegt.",
+    "name": "Name",
+    "sport": "Sportart",
+    "league": "Liga",
+    "rank": "Rang",
+    "createButton": "Mannschaft erstellen",
+    "createTitle": "Neue Mannschaft",
+    "editTitle": "Mannschaft bearbeiten",
+    "namePlaceholder": "z. B. Herren 1",
+    "sportPlaceholder": "z. B. Fußball",
+    "leaguePlaceholder": "z. B. Kreisliga",
+    "created": "Mannschaft erstellt",
+    "updated": "Mannschaft aktualisiert",
+    "deleteTitle": "Mannschaft löschen",
+    "deleteConfirm": "Möchtest du die Mannschaft \"{{name}}\" wirklich löschen?",
+    "deleted": "Mannschaft gelöscht",
+    "rankConflict": "Für diese Sportart ist der Rang bereits vergeben.",
+    "open": "Öffnen"
+  },
+  "members": {
+    "title": "Mitglieder",
+    "empty": "Noch keine Mitglieder.",
+    "name": "Name",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "unnamed": "Ohne Namen",
+    "roleUpdated": "Rolle aktualisiert",
+    "removeTitle": "Mitglied entfernen",
+    "removeConfirm": "Möchtest du {{name}} wirklich aus dem Verein entfernen?",
+    "removed": "Mitglied entfernt",
+    "roles": {
+      "CLUB_ADMIN": "Vereinsadmin",
+      "MEMBER": "Mitglied"
+    }
+  },
+  "invitations": {
+    "title": "Einladungen",
+    "empty": "Noch keine Einladungen versendet.",
+    "email": "E-Mail",
+    "clubRole": "Vereinsrolle",
+    "status": "Status",
+    "expiresAt": "Läuft ab",
+    "invitedBy": "Eingeladen von",
+    "teamAssignments": "Mannschaften",
+    "inviteButton": "Mitglied einladen",
+    "inviteTitle": "Mitglied einladen",
+    "emailPlaceholder": "person@beispiel.de",
+    "teamAssignmentsLabel": "Mannschaften vorab zuweisen",
+    "teamAssignmentsPlaceholder": "Mannschaften auswählen",
+    "teamRole": "Rolle in {{team}}",
+    "sent": "Einladung versendet",
+    "revokeTitle": "Einladung zurückziehen",
+    "revokeConfirm": "Möchtest du die Einladung an {{email}} zurückziehen?",
+    "revoked": "Einladung zurückgezogen",
+    "revoke": "Zurückziehen",
+    "statuses": {
+      "PENDING": "Ausstehend",
+      "ACCEPTED": "Angenommen",
+      "REVOKED": "Zurückgezogen"
+    }
+  },
+  "teamRoles": {
+    "TEAM_ADMIN": "Mannschaftsadmin",
+    "PLAYER": "Spieler"
+  },
+  "team": {
+    "notFound": "Mannschaft nicht gefunden.",
+    "membersTitle": "Mannschaftsmitglieder",
+    "empty": "Noch keine Mitglieder in dieser Mannschaft.",
+    "addButton": "Mitglied hinzufügen",
+    "addTitle": "Mitglied hinzufügen",
+    "selectMember": "Vereinsmitglied auswählen",
+    "noEligible": "Alle Vereinsmitglieder sind bereits in dieser Mannschaft.",
+    "added": "Mitglied hinzugefügt",
+    "roleUpdated": "Rolle aktualisiert",
+    "removeTitle": "Mitglied entfernen",
+    "removeConfirm": "Möchtest du {{name}} wirklich aus der Mannschaft entfernen?",
+    "removed": "Mitglied entfernt"
+  },
+  "invite": {
+    "loading": "Einladung wird geprüft…",
+    "invalidTitle": "Einladung ungültig",
+    "invalid": "Diese Einladung konnte nicht gefunden werden.",
+    "validTitle": "Einladung zu {{club}}",
+    "validText": "Du wurdest eingeladen, dem Verein \"{{club}}\" beizutreten.",
+    "maskedEmail": "Eingeladen: {{email}}",
+    "loginToJoin": "Anmelden und beitreten",
+    "joining": "Beitritt wird abgeschlossen…",
+    "successTitle": "Willkommen bei {{club}}!",
+    "successText": "Du bist dem Verein beigetreten. Öffne die Spieler-App, um loszulegen.",
+    "openPlayerApp": "Spieler-App öffnen",
+    "expiredTitle": "Einladung abgelaufen",
+    "expired": "Diese Einladung ist leider abgelaufen. Bitte den Verein um eine neue Einladung.",
+    "revokedTitle": "Einladung zurückgezogen",
+    "revoked": "Diese Einladung wurde zurückgezogen und ist nicht mehr gültig.",
+    "acceptedTitle": "Bereits angenommen",
+    "accepted": "Diese Einladung wurde bereits angenommen.",
+    "redeemFailed": "Der Beitritt konnte nicht abgeschlossen werden."
+  }
+}

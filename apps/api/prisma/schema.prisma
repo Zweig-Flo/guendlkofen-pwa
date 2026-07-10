@@ -21,6 +21,33 @@ enum TeamRole {
   PLAYER
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
+enum EventStatus {
+  SCHEDULED
+  CANCELLED
+}
+
+enum EventSource {
+  MANUAL
+  IMPORT
+}
+
+enum HomeAway {
+  HOME
+  AWAY
+  NEUTRAL
+}
+
+enum VoteChoice {
+  YES
+  NO
+}
+
 model User {
   id           String  @id @default(cuid())
   auth0Sub     String  @unique
@@ -32,6 +59,11 @@ model User {
   clubMemberships ClubMembership[]
   teamMemberships TeamMembership[]
 
+  votes Vote[]
+
+  sentInvitations     Invitation[] @relation("InvitedBy")
+  acceptedInvitations Invitation[] @relation("AcceptedBy")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -42,6 +74,7 @@ model Club {
 
   teams       Team[]
   memberships ClubMembership[]
+  invitations Invitation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -58,6 +91,10 @@ model Team {
   rank   Int
 
   memberships TeamMembership[]
+
+  events Event[]
+
+  invitationAssignments InvitationTeamAssignment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -89,4 +126,79 @@ model TeamMembership {
   createdAt DateTime @default(now())
 
   @@unique([userId, teamId])
+}
+
+model Invitation {
+  id       String           @id @default(cuid())
+  clubId   String
+  club     Club             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  email    String
+  clubRole ClubRole         @default(MEMBER)
+  token    String           @unique
+  status   InvitationStatus @default(PENDING)
+  expiresAt DateTime
+
+  // SetNull (not Cascade): the invitation audit trail survives inviter deletion
+  invitedById String?
+  invitedBy   User?   @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  acceptedById String?
+  acceptedBy   User?   @relation("AcceptedBy", fields: [acceptedById], references: [id], onDelete: SetNull)
+
+  teamAssignments InvitationTeamAssignment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InvitationTeamAssignment {
+  id           String     @id @default(cuid())
+  invitationId String
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  teamId       String
+  team         Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  role         TeamRole   @default(PLAYER)
+
+  @@unique([invitationId, teamId])
+}
+
+model Event {
+  id     String @id @default(cuid())
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  startsAt DateTime // kickoff; drives ordering, "upcoming", vote-lock, reminders
+  opponent String // free text ("SV Musterhausen"); required — a game needs one
+  location String? // venue / address; optional
+  homeAway HomeAway @default(HOME)
+  notes    String? // free-text meta (meeting time, kit colour, …)
+
+  status EventStatus @default(SCHEDULED)
+  source EventSource @default(MANUAL)
+
+  // Dedupe key for idempotent re-import. Null for manual events. Unique per team.
+  importKey String?
+
+  votes Vote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teamId, importKey]) // idempotent CSV re-run; nulls don't collide in Postgres
+  @@index([teamId, startsAt]) // team planner list + my-upcoming aggregation
+}
+
+model Vote {
+  id      String     @id @default(cuid())
+  eventId String
+  event   Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  choice  VoteChoice
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // updated when a player flips YES↔NO
+
+  @@unique([eventId, userId]) // one vote per user per event; also the upsert key
+  @@index([eventId]) // tally teammates' votes for one event
 }

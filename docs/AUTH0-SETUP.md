@@ -26,6 +26,16 @@ exports.onExecutePostLogin = async (event, api) => {
 Without the Action, login still works — the local user is created from `sub` alone, just
 without email/name.
 
+## Portal (apps/portal)
+
+The management portal runs on `http://localhost:5174` and uses the **same Auth0 SPA
+application** as the PWA. Add its origin to that SPA app's settings alongside the existing
+PWA URLs:
+
+- **Allowed Callback URLs** — add `http://localhost:5174`
+- **Allowed Logout URLs** — add `http://localhost:5174`
+- **Allowed Web Origins** — add `http://localhost:5174`
+
 ## Super admins
 
 Set `SUPER_ADMIN_EMAILS` in `apps/api/.env` to a comma-separated list of emails; users whose

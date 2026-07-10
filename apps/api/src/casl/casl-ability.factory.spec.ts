@@ -132,6 +132,28 @@ describe('CaslAbilityFactory', () => {
         ability.can('update', toSubject('TeamMembership', teamMembershipB)),
       ).toBe(false);
     });
+
+    it('can manage invitations of club A only', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const invitationA = { id: 'inv-1', clubId: 'club-a' };
+      const invitationB = { id: 'inv-2', clubId: 'club-b' };
+      expect(ability.can('create', toSubject('Invitation', invitationA))).toBe(
+        true,
+      );
+      expect(ability.can('read', toSubject('Invitation', invitationA))).toBe(
+        true,
+      );
+      expect(ability.can('delete', toSubject('Invitation', invitationA))).toBe(
+        true,
+      );
+      expect(ability.can('read', toSubject('Invitation', invitationB))).toBe(
+        false,
+      );
+      expect(ability.can('create', toSubject('Invitation', invitationB))).toBe(
+        false,
+      );
+    });
   });
 
   describe('member of club A', () => {
@@ -188,6 +210,18 @@ describe('CaslAbilityFactory', () => {
 
       expect(ability.can('read', toSubject('Club', clubB))).toBe(false);
       expect(ability.can('read', toSubject('Team', teamB1))).toBe(false);
+    });
+
+    it('has no invitation access at all', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const invitationA = { id: 'inv-1', clubId: 'club-a' };
+      expect(ability.can('read', toSubject('Invitation', invitationA))).toBe(
+        false,
+      );
+      expect(ability.can('create', toSubject('Invitation', invitationA))).toBe(
+        false,
+      );
     });
   });
 

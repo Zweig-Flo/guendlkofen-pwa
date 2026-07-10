@@ -28,9 +28,14 @@ import type {
   ClubMembershipDto,
   CreateClubDto,
   CreateClubMemberDto,
+  CreateInvitationDto,
   CreateTeamDto,
   CreateTeamMemberDto,
+  InvitationDto,
+  InvitationPreviewDto,
+  InvitationsControllerPreviewParams,
   MessageDto,
+  RedeemInvitationDto,
   TeamDto,
   TeamMembershipDto,
   UpdateClubDto,
@@ -1641,5 +1646,414 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getTeamMembersControllerRemoveMutationOptions(options), queryClient);
+    }
+
+export const getClubInvitationsControllerFindAllUrl = (clubId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/invitations`
+}
+
+export const clubInvitationsControllerFindAll = async (clubId: string, options?: RequestInit): Promise<InvitationDto[]> => {
+
+  return customFetch<InvitationDto[]>(getClubInvitationsControllerFindAllUrl(clubId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getClubInvitationsControllerFindAllQueryKey = (clubId: string,) => {
+    return [
+    `/clubs/${clubId}/invitations`
+    ] as const;
+    }
+
+
+export const getClubInvitationsControllerFindAllQueryOptions = <TData = Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError = unknown>(clubId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getClubInvitationsControllerFindAllQueryKey(clubId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>> = ({ signal }) => clubInvitationsControllerFindAll(clubId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clubId !== null && clubId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ClubInvitationsControllerFindAllQueryResult = NonNullable<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>>
+export type ClubInvitationsControllerFindAllQueryError = unknown
+
+
+export function useClubInvitationsControllerFindAll<TData = Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError = unknown>(
+ clubId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useClubInvitationsControllerFindAll<TData = Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError = unknown>(
+ clubId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useClubInvitationsControllerFindAll<TData = Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError = unknown>(
+ clubId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useClubInvitationsControllerFindAll<TData = Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError = unknown>(
+ clubId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof clubInvitationsControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getClubInvitationsControllerFindAllQueryOptions(clubId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getClubInvitationsControllerCreateUrl = (clubId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/invitations`
+}
+
+export const clubInvitationsControllerCreate = async (clubId: string,
+    createInvitationDto: CreateInvitationDto, options?: RequestInit): Promise<InvitationDto> => {
+
+  return customFetch<InvitationDto>(getClubInvitationsControllerCreateUrl(clubId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createInvitationDto)
+  }
+);}
+
+
+
+
+
+export const getClubInvitationsControllerCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof clubInvitationsControllerCreate>>, TError,{clubId: string;data: CreateInvitationDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof clubInvitationsControllerCreate>>, TError,{clubId: string;data: CreateInvitationDto}, TContext> => {
+
+const mutationKey = ['clubInvitationsControllerCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof clubInvitationsControllerCreate>>, {clubId: string;data: CreateInvitationDto}> = (props) => {
+          const {clubId,data} = props ?? {};
+
+          return  clubInvitationsControllerCreate(clubId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ClubInvitationsControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof clubInvitationsControllerCreate>>>
+    export type ClubInvitationsControllerCreateMutationBody = CreateInvitationDto
+    export type ClubInvitationsControllerCreateMutationError = unknown
+
+    export const useClubInvitationsControllerCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof clubInvitationsControllerCreate>>, TError,{clubId: string;data: CreateInvitationDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof clubInvitationsControllerCreate>>,
+        TError,
+        {clubId: string;data: CreateInvitationDto},
+        TContext
+      > => {
+      return useMutation(getClubInvitationsControllerCreateMutationOptions(options), queryClient);
+    }
+
+export const getClubInvitationsControllerRevokeUrl = (clubId: string,
+    invitationId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/invitations/${invitationId}`
+}
+
+export const clubInvitationsControllerRevoke = async (clubId: string,
+    invitationId: string, options?: RequestInit): Promise<InvitationDto> => {
+
+  return customFetch<InvitationDto>(getClubInvitationsControllerRevokeUrl(clubId,invitationId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getClubInvitationsControllerRevokeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof clubInvitationsControllerRevoke>>, TError,{clubId: string;invitationId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof clubInvitationsControllerRevoke>>, TError,{clubId: string;invitationId: string}, TContext> => {
+
+const mutationKey = ['clubInvitationsControllerRevoke'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof clubInvitationsControllerRevoke>>, {clubId: string;invitationId: string}> = (props) => {
+          const {clubId,invitationId} = props ?? {};
+
+          return  clubInvitationsControllerRevoke(clubId,invitationId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ClubInvitationsControllerRevokeMutationResult = NonNullable<Awaited<ReturnType<typeof clubInvitationsControllerRevoke>>>
+
+    export type ClubInvitationsControllerRevokeMutationError = unknown
+
+    export const useClubInvitationsControllerRevoke = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof clubInvitationsControllerRevoke>>, TError,{clubId: string;invitationId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof clubInvitationsControllerRevoke>>,
+        TError,
+        {clubId: string;invitationId: string},
+        TContext
+      > => {
+      return useMutation(getClubInvitationsControllerRevokeMutationOptions(options), queryClient);
+    }
+
+export const getInvitationsControllerPreviewUrl = (params: InvitationsControllerPreviewParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/invitations/preview?${stringifiedParams}` : `/invitations/preview`
+}
+
+/**
+ * Returns just enough to render the acceptance landing page: the club name, a masked email and a computed status. Never returns any ids or the token.
+ * @summary Preview an invitation by token (no login required)
+ */
+export const invitationsControllerPreview = async (params: InvitationsControllerPreviewParams, options?: RequestInit): Promise<InvitationPreviewDto> => {
+
+  return customFetch<InvitationPreviewDto>(getInvitationsControllerPreviewUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getInvitationsControllerPreviewQueryKey = (params?: InvitationsControllerPreviewParams,) => {
+    return [
+    `/invitations/preview`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getInvitationsControllerPreviewQueryOptions = <TData = Awaited<ReturnType<typeof invitationsControllerPreview>>, TError = unknown>(params: InvitationsControllerPreviewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof invitationsControllerPreview>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getInvitationsControllerPreviewQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof invitationsControllerPreview>>> = ({ signal }) => invitationsControllerPreview(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof invitationsControllerPreview>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type InvitationsControllerPreviewQueryResult = NonNullable<Awaited<ReturnType<typeof invitationsControllerPreview>>>
+export type InvitationsControllerPreviewQueryError = unknown
+
+
+export function useInvitationsControllerPreview<TData = Awaited<ReturnType<typeof invitationsControllerPreview>>, TError = unknown>(
+ params: InvitationsControllerPreviewParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof invitationsControllerPreview>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof invitationsControllerPreview>>,
+          TError,
+          Awaited<ReturnType<typeof invitationsControllerPreview>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useInvitationsControllerPreview<TData = Awaited<ReturnType<typeof invitationsControllerPreview>>, TError = unknown>(
+ params: InvitationsControllerPreviewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof invitationsControllerPreview>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof invitationsControllerPreview>>,
+          TError,
+          Awaited<ReturnType<typeof invitationsControllerPreview>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useInvitationsControllerPreview<TData = Awaited<ReturnType<typeof invitationsControllerPreview>>, TError = unknown>(
+ params: InvitationsControllerPreviewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof invitationsControllerPreview>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Preview an invitation by token (no login required)
+ */
+
+export function useInvitationsControllerPreview<TData = Awaited<ReturnType<typeof invitationsControllerPreview>>, TError = unknown>(
+ params: InvitationsControllerPreviewParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof invitationsControllerPreview>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getInvitationsControllerPreviewQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getInvitationsControllerRedeemUrl = () => {
+
+
+
+
+  return `/invitations/redeem`
+}
+
+/**
+ * Accepts the invitation for the currently authenticated user. The logged-in account does NOT need to match the invited email address — the invitee may sign up with a different address. Creates/upgrades the club membership and any pre-assigned team memberships.
+ * @summary Redeem an invitation
+ */
+export const invitationsControllerRedeem = async (redeemInvitationDto: RedeemInvitationDto, options?: RequestInit): Promise<ClubMembershipDto> => {
+
+  return customFetch<ClubMembershipDto>(getInvitationsControllerRedeemUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(redeemInvitationDto)
+  }
+);}
+
+
+
+
+
+export const getInvitationsControllerRedeemMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof invitationsControllerRedeem>>, TError,{data: RedeemInvitationDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof invitationsControllerRedeem>>, TError,{data: RedeemInvitationDto}, TContext> => {
+
+const mutationKey = ['invitationsControllerRedeem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof invitationsControllerRedeem>>, {data: RedeemInvitationDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  invitationsControllerRedeem(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type InvitationsControllerRedeemMutationResult = NonNullable<Awaited<ReturnType<typeof invitationsControllerRedeem>>>
+    export type InvitationsControllerRedeemMutationBody = RedeemInvitationDto
+    export type InvitationsControllerRedeemMutationError = unknown
+
+    /**
+ * @summary Redeem an invitation
+ */
+export const useInvitationsControllerRedeem = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof invitationsControllerRedeem>>, TError,{data: RedeemInvitationDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof invitationsControllerRedeem>>,
+        TError,
+        {data: RedeemInvitationDto},
+        TContext
+      > => {
+      return useMutation(getInvitationsControllerRedeemMutationOptions(options), queryClient);
     }
 

@@ -52,6 +52,22 @@ export class CaslAbilityFactory {
       });
     }
 
+    // The planner is stricter than the club-wide read: events and votes are
+    // visible only to members OF THE TEAM, not to every club member. So the
+    // Event/Vote abilities key off team memberships, never off memberClubIds.
+    const memberTeamIds = teamMemberships.map((m) => m.teamId);
+    if (memberTeamIds.length > 0) {
+      // Players (and admins) read their teams' events and cast/change their vote.
+      can('read', 'Event', { teamId: { in: memberTeamIds } });
+      can('vote', 'Event', { teamId: { in: memberTeamIds } });
+      // Transparency: teammates see each other's votes on their team's events.
+      can('read', 'Vote', {
+        event: { is: { teamId: { in: memberTeamIds } } },
+      });
+      // A player only ever writes their own vote row.
+      can('manage', 'Vote', { userId: user.id });
+    }
+
     const adminClubIds = clubMemberships
       .filter((m) => m.role === ClubRole.CLUB_ADMIN)
       .map((m) => m.clubId);
@@ -63,6 +79,15 @@ export class CaslAbilityFactory {
       can('manage', 'TeamMembership', {
         team: { is: { clubId: { in: adminClubIds } } },
       });
+      // Club admins manage the invitations of their clubs; members get none.
+      can('manage', 'Invitation', { clubId: { in: adminClubIds } });
+      // Club admins run the planner for every team of their club.
+      can('manage', 'Event', {
+        team: { is: { clubId: { in: adminClubIds } } },
+      });
+      can('read', 'Vote', {
+        event: { is: { team: { is: { clubId: { in: adminClubIds } } } } },
+      });
     }
 
     const adminTeamIds = teamMemberships
@@ -72,6 +97,12 @@ export class CaslAbilityFactory {
       // Team admins may update their team but not create or delete teams.
       can(['read', 'update'], 'Team', { id: { in: adminTeamIds } });
       can('manage', 'TeamMembership', { teamId: { in: adminTeamIds } });
+      // Team admins fully manage their team's planner (create/edit/cancel/delete
+      // events, import) and read every teammate's vote.
+      can('manage', 'Event', { teamId: { in: adminTeamIds } });
+      can('read', 'Vote', {
+        event: { is: { teamId: { in: adminTeamIds } } },
+      });
     }
 
     return build();

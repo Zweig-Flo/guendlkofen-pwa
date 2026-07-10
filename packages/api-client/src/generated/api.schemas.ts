@@ -224,3 +224,137 @@ export interface UpdateTeamMemberDto {
   role: UpdateTeamMemberDtoRole;
 }
 
+/**
+ * Role the invitee will get in the team
+ */
+export type InvitationTeamAssignmentDtoRole = typeof InvitationTeamAssignmentDtoRole[keyof typeof InvitationTeamAssignmentDtoRole];
+
+
+export const InvitationTeamAssignmentDtoRole = {
+  TEAM_ADMIN: 'TEAM_ADMIN',
+  PLAYER: 'PLAYER',
+} as const;
+
+export interface InvitationTeamAssignmentDto {
+  /** Id of the assigned team */
+  teamId: string;
+  /** Name of the assigned team */
+  teamName: string;
+  /** Role the invitee will get in the team */
+  role: InvitationTeamAssignmentDtoRole;
+}
+
+/**
+ * Role the invitee will get in the club
+ */
+export type InvitationDtoClubRole = typeof InvitationDtoClubRole[keyof typeof InvitationDtoClubRole];
+
+
+export const InvitationDtoClubRole = {
+  CLUB_ADMIN: 'CLUB_ADMIN',
+  MEMBER: 'MEMBER',
+} as const;
+
+/**
+ * Current status of the invitation
+ */
+export type InvitationDtoStatus = typeof InvitationDtoStatus[keyof typeof InvitationDtoStatus];
+
+
+export const InvitationDtoStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REVOKED: 'REVOKED',
+} as const;
+
+export interface InvitationDto {
+  /** Invitation id */
+  id: string;
+  /** Id of the club */
+  clubId: string;
+  /** Invited email address */
+  email: string;
+  /** Role the invitee will get in the club */
+  clubRole: InvitationDtoClubRole;
+  /** Current status of the invitation */
+  status: InvitationDtoStatus;
+  /** When the invitation expires */
+  expiresAt: string;
+  /**
+     * The user who sent the invitation (null if that account was deleted)
+     * @nullable
+     */
+  invitedBy: MemberUserDto | null;
+  /** Pre-assigned team memberships */
+  teamAssignments: InvitationTeamAssignmentDto[];
+}
+
+/**
+ * Role within the team (defaults to PLAYER)
+ */
+export type CreateInvitationTeamAssignmentDtoRole = typeof CreateInvitationTeamAssignmentDtoRole[keyof typeof CreateInvitationTeamAssignmentDtoRole];
+
+
+export const CreateInvitationTeamAssignmentDtoRole = {
+  TEAM_ADMIN: 'TEAM_ADMIN',
+  PLAYER: 'PLAYER',
+} as const;
+
+export interface CreateInvitationTeamAssignmentDto {
+  /** Id of a team of this club to pre-assign the invitee to */
+  teamId: string;
+  /** Role within the team (defaults to PLAYER) */
+  role?: CreateInvitationTeamAssignmentDtoRole;
+}
+
+/**
+ * Role within the club (defaults to MEMBER)
+ */
+export type CreateInvitationDtoClubRole = typeof CreateInvitationDtoClubRole[keyof typeof CreateInvitationDtoClubRole];
+
+
+export const CreateInvitationDtoClubRole = {
+  CLUB_ADMIN: 'CLUB_ADMIN',
+  MEMBER: 'MEMBER',
+} as const;
+
+export interface CreateInvitationDto {
+  /** Email address to invite into the club */
+  email: string;
+  /** Role within the club (defaults to MEMBER) */
+  clubRole?: CreateInvitationDtoClubRole;
+  /** Teams of this club to pre-assign the invitee to */
+  teamAssignments?: CreateInvitationTeamAssignmentDto[];
+}
+
+/**
+ * Computed status: 'valid' (PENDING, not expired), 'expired' (PENDING but past expiry), 'revoked', or 'accepted'
+ */
+export type InvitationPreviewDtoStatus = typeof InvitationPreviewDtoStatus[keyof typeof InvitationPreviewDtoStatus];
+
+
+export const InvitationPreviewDtoStatus = {
+  valid: 'valid',
+  expired: 'expired',
+  revoked: 'revoked',
+  accepted: 'accepted',
+} as const;
+
+export interface InvitationPreviewDto {
+  /** Name of the inviting club */
+  clubName: string;
+  /** Masked invited email (e.g. f***@e***.com) */
+  maskedEmail: string;
+  /** Computed status: 'valid' (PENDING, not expired), 'expired' (PENDING but past expiry), 'revoked', or 'accepted' */
+  status: InvitationPreviewDtoStatus;
+}
+
+export interface RedeemInvitationDto {
+  /** The invitation token from the acceptance link */
+  token: string;
+}
+
+export type InvitationsControllerPreviewParams = {
+token: string;
+};
+

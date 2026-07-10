@@ -3,13 +3,22 @@ import type { PrismaQueryOf, Subjects } from '@casl/prisma/runtime';
 import type {
   Club,
   ClubMembership,
+  Event,
+  Invitation,
   Prisma,
   Team,
   TeamMembership,
   User,
+  Vote,
 } from '../generated/prisma/client';
 
-export type Action = 'manage' | 'create' | 'read' | 'update' | 'delete';
+export type Action =
+  | 'manage'
+  | 'create'
+  | 'read'
+  | 'update'
+  | 'delete'
+  | 'vote';
 
 export type AppSubjects =
   | 'all'
@@ -19,6 +28,9 @@ export type AppSubjects =
       Team: Team;
       ClubMembership: ClubMembership;
       TeamMembership: TeamMembership;
+      Invitation: Invitation;
+      Event: Event;
+      Vote: Vote;
     }>;
 
 export type SubjectName = Extract<AppSubjects, string>;
