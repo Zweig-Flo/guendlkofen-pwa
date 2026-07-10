@@ -1,0 +1,15 @@
+{
+    "short_name": "SVG",
+    "name": "SV Guendlkofen",
+    "icons": [
+        {
+            "src": "public/favicon.svg",
+            "sizes": "192x192",
+            "type": "image/svg"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "black",
+    "background_color": "white"
+}
