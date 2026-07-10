@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "npm run dev -w apps/web",
     "dev:api": "npm run start:dev -w apps/api",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
     "build": "npm run build --workspaces --if-present",
     "build:web": "npm run build -w apps/web",
     "build:api": "npm run build -w apps/api",

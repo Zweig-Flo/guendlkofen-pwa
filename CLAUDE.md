@@ -9,5 +9,6 @@ npm-workspaces monorepo:
 
 - `npm run dev` — frontend dev server (port 5173)
 - `npm run dev:api` — backend in watch mode (port 3000)
+- `npm run db:up` / `npm run db:down` — local Postgres 17 via Docker compose (port 5432, Prisma ORM in the api)
 - `npm run build` — build all workspaces
 - `npm run lint` / `npm run test` — across all workspaces
