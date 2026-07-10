@@ -1,5 +1,5 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOAuth2, ApiOkResponse } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { AppService } from './app.service';
 import { Public } from './auth/public.decorator';
@@ -19,6 +19,7 @@ export class AppController {
 
   @Get('me')
   @ApiBearerAuth()
+  @ApiOAuth2(['openid', 'profile', 'email'])
   @ApiOkResponse({ type: ProfileDto })
   getProfile(@Req() req: Request): ProfileDto {
     const user = req.user as { sub: string };
