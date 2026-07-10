@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"
@@ -11,4 +9,84 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum ClubRole {
+  CLUB_ADMIN
+  MEMBER
+}
+
+enum TeamRole {
+  TEAM_ADMIN
+  PLAYER
+}
+
+model User {
+  id           String  @id @default(cuid())
+  auth0Sub     String  @unique
+  email        String?
+  name         String?
+  locale       String  @default("de")
+  isSuperAdmin Boolean @default(false)
+
+  clubMemberships ClubMembership[]
+  teamMemberships TeamMembership[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Club {
+  id   String @id @default(cuid())
+  name String
+
+  teams       Team[]
+  memberships ClubMembership[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Team {
+  id     String  @id @default(cuid())
+  clubId String
+  club   Club    @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  name   String
+  sport  String
+  league String?
+  // Ordering among the club's teams of the same sport; 1 = highest team
+  rank   Int
+
+  memberships TeamMembership[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([clubId, sport, rank])
+}
+
+model ClubMembership {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clubId String
+  club   Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  role   ClubRole
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, clubId])
+}
+
+model TeamMembership {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  role   TeamRole
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, teamId])
 }

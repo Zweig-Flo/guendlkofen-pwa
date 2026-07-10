@@ -3,10 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { passportJwtSecret } from 'jwks-rsa';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import type { User } from '../generated/prisma/client';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(config: ConfigService) {
+  constructor(
+    config: ConfigService,
+    private readonly usersService: UsersService,
+  ) {
     const domain = config.getOrThrow<string>('AUTH0_DOMAIN');
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -22,8 +27,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(payload: Record<string, unknown>) {
-    // Returned value becomes request.user
-    return payload;
+  async validate(payload: Record<string, unknown>): Promise<User> {
+    // Returned value becomes request.user — the local Prisma User record.
+    return this.usersService.provisionFromToken(payload);
   }
 }

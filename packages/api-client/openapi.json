@@ -1,0 +1,1378 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "AppController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/clubs": {
+      "post": {
+        "operationId": "ClubsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClubDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "clubs"
+        ]
+      },
+      "get": {
+        "operationId": "ClubsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClubDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "clubs"
+        ]
+      }
+    },
+    "/clubs/{clubId}": {
+      "get": {
+        "operationId": "ClubsController_findOne",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "clubs"
+        ]
+      },
+      "patch": {
+        "operationId": "ClubsController_update",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClubDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "clubs"
+        ]
+      },
+      "delete": {
+        "operationId": "ClubsController_remove",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "clubs"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams": {
+      "get": {
+        "operationId": "TeamsController_findAll",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "teams"
+        ]
+      },
+      "post": {
+        "operationId": "TeamsController_create",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}": {
+      "get": {
+        "operationId": "TeamsController_findOne",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "teams"
+        ]
+      },
+      "patch": {
+        "operationId": "TeamsController_update",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTeamDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "teams"
+        ]
+      },
+      "delete": {
+        "operationId": "TeamsController_remove",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/clubs/{clubId}/members": {
+      "get": {
+        "operationId": "ClubMembersController_findAll",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClubMembershipDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "club-members"
+        ]
+      },
+      "post": {
+        "operationId": "ClubMembersController_add",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClubMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "club-members"
+        ]
+      }
+    },
+    "/clubs/{clubId}/members/{membershipId}": {
+      "patch": {
+        "operationId": "ClubMembersController_updateRole",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "membershipId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClubMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "club-members"
+        ]
+      },
+      "delete": {
+        "operationId": "ClubMembersController_remove",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "membershipId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClubMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "club-members"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/members": {
+      "get": {
+        "operationId": "TeamMembersController_findAll",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TeamMembershipDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "team-members"
+        ]
+      },
+      "post": {
+        "operationId": "TeamMembersController_add",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTeamMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "team-members"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/members/{membershipId}": {
+      "patch": {
+        "operationId": "TeamMembersController_updateRole",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "membershipId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTeamMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "team-members"
+        ]
+      },
+      "delete": {
+        "operationId": "TeamMembersController_remove",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "membershipId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamMembershipDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "team-members"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Guendlkofen API",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://svg.eu.auth0.com/authorize?audience=https%3A%2F%2Fapi.guendlkofen.app",
+            "tokenUrl": "https://svg.eu.auth0.com/oauth/token",
+            "scopes": {
+              "openid": "OpenID Connect",
+              "profile": "User profile",
+              "email": "Email address"
+            }
+          }
+        }
+      },
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "MessageDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Hello World!"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Local user id",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address, if known from the Auth0 token",
+            "example": "player@example.com",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name, if known from the Auth0 token",
+            "example": "Max Mustermann",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "description": "Preferred locale of the user",
+            "example": "de"
+          },
+          "isSuperAdmin": {
+            "type": "boolean",
+            "description": "Whether the user is a platform super admin",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "locale",
+          "isSuperAdmin"
+        ]
+      },
+      "CreateClubDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Club name",
+            "example": "SV Gündlkofen"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ClubDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Club id",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "name": {
+            "type": "string",
+            "description": "Club name",
+            "example": "SV Gündlkofen"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "UpdateClubDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Club name",
+            "example": "SV Gündlkofen"
+          }
+        }
+      },
+      "TeamDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Team id",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "clubId": {
+            "type": "string",
+            "description": "Id of the club the team belongs to",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "name": {
+            "type": "string",
+            "description": "Team name",
+            "example": "Herren 1"
+          },
+          "sport": {
+            "type": "string",
+            "description": "Sport of the team",
+            "example": "Tennis"
+          },
+          "league": {
+            "type": "string",
+            "description": "League the team plays in",
+            "example": "Bezirksliga",
+            "nullable": true
+          },
+          "rank": {
+            "type": "number",
+            "description": "Ordering among the club's teams of the same sport; 1 is the highest team",
+            "example": 1,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "clubId",
+          "name",
+          "sport",
+          "league",
+          "rank"
+        ]
+      },
+      "CreateTeamDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Team name",
+            "example": "Herren 1"
+          },
+          "sport": {
+            "type": "string",
+            "description": "Sport of the team",
+            "example": "Tennis"
+          },
+          "league": {
+            "type": "string",
+            "description": "League the team plays in",
+            "example": "Bezirksliga"
+          },
+          "rank": {
+            "type": "number",
+            "description": "Ordering among the club's teams of the same sport; 1 is the highest team",
+            "example": 1,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "name",
+          "sport",
+          "rank"
+        ]
+      },
+      "UpdateTeamDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Team name",
+            "example": "Herren 1"
+          },
+          "sport": {
+            "type": "string",
+            "description": "Sport of the team",
+            "example": "Tennis"
+          },
+          "league": {
+            "type": "string",
+            "description": "League the team plays in",
+            "example": "Bezirksliga"
+          },
+          "rank": {
+            "type": "number",
+            "description": "Ordering among the club's teams of the same sport; 1 is the highest team",
+            "example": 1,
+            "minimum": 1
+          }
+        }
+      },
+      "MemberUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Local user id",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address, if known",
+            "example": "player@example.com",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name, if known",
+            "example": "Max Mustermann",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name"
+        ]
+      },
+      "ClubMembershipDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Membership id",
+            "example": "cmrf55tba0002wftfb78qh896"
+          },
+          "clubId": {
+            "type": "string",
+            "description": "Id of the club",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Id of the member user",
+            "example": "cmrf55tba0003wftfb78qh897"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role of the user within the club",
+            "enum": [
+              "CLUB_ADMIN",
+              "MEMBER"
+            ],
+            "example": "MEMBER"
+          },
+          "user": {
+            "description": "The member user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberUserDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "clubId",
+          "userId",
+          "role",
+          "user"
+        ]
+      },
+      "CreateClubMemberDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Id of an existing user to add to the club",
+            "example": "cmrf55tba0003wftfb78qh897"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role within the club (defaults to MEMBER)",
+            "enum": [
+              "CLUB_ADMIN",
+              "MEMBER"
+            ],
+            "default": "MEMBER"
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "UpdateClubMemberDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "New role within the club — this is how members are promoted to club admins",
+            "enum": [
+              "CLUB_ADMIN",
+              "MEMBER"
+            ],
+            "example": "CLUB_ADMIN"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "TeamMembershipDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Membership id",
+            "example": "cmrf55tba0004wftfb78qh898"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "Id of the team",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Id of the member user",
+            "example": "cmrf55tba0003wftfb78qh897"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role of the user within the team",
+            "enum": [
+              "TEAM_ADMIN",
+              "PLAYER"
+            ],
+            "example": "PLAYER"
+          },
+          "user": {
+            "description": "The member user",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberUserDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "teamId",
+          "userId",
+          "role",
+          "user"
+        ]
+      },
+      "CreateTeamMemberDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Id of an existing user (must already be a club member) to add to the team",
+            "example": "cmrf55tba0003wftfb78qh897"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role within the team (defaults to PLAYER)",
+            "enum": [
+              "TEAM_ADMIN",
+              "PLAYER"
+            ],
+            "default": "PLAYER"
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "UpdateTeamMemberDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "New role within the team — this is how players are promoted to team admins",
+            "enum": [
+              "TEAM_ADMIN",
+              "PLAYER"
+            ],
+            "example": "TEAM_ADMIN"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      }
+    }
+  }
+}

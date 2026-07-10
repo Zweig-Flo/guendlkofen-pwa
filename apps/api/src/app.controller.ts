@@ -4,7 +4,8 @@ import type { Request } from 'express';
 import { AppService } from './app.service';
 import { Public } from './auth/public.decorator';
 import { MessageDto } from './dto/message.dto';
-import { ProfileDto } from './dto/profile.dto';
+import type { User } from './generated/prisma/client';
+import { UserDto } from './users/dto/user.dto';
 
 @Controller()
 export class AppController {
@@ -20,9 +21,9 @@ export class AppController {
   @Get('me')
   @ApiBearerAuth()
   @ApiOAuth2(['openid', 'profile', 'email'])
-  @ApiOkResponse({ type: ProfileDto })
-  getProfile(@Req() req: Request): ProfileDto {
-    const user = req.user as { sub: string };
-    return { sub: user.sub };
+  @ApiOkResponse({ type: UserDto })
+  getProfile(@Req() req: Request): UserDto {
+    // request.user is the local Prisma User record (set by JwtStrategy.validate)
+    return UserDto.fromUser(req.user as User);
   }
 }

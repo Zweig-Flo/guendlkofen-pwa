@@ -1,4 +1,8 @@
 {
+  "ts-node": {
+    "transpileOnly": true,
+    "experimentalResolver": true
+  },
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",

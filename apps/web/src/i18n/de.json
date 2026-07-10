@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "loading": "Wird geladen…",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "loggedInAs": "Angemeldet als {{name}}",
+    "callApi": "API /me aufrufen",
+    "apiError": "Fehler: {{message}}"
+  }
+}
