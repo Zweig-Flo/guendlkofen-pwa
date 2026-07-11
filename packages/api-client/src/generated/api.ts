@@ -24,25 +24,37 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CastVoteDto,
   ClubDto,
   ClubMembershipDto,
   CreateClubDto,
   CreateClubMemberDto,
+  CreateEventDto,
   CreateInvitationDto,
   CreateTeamDto,
   CreateTeamMemberDto,
+  EventDetailDto,
+  EventDto,
+  EventVotesDto,
+  EventsControllerFindAllParams,
+  EventsControllerImportBody,
+  ImportResultDto,
   InvitationDto,
   InvitationPreviewDto,
   InvitationsControllerPreviewParams,
+  MeControllerUpcomingEventsParams,
   MessageDto,
+  MyUpcomingEventDto,
   RedeemInvitationDto,
   TeamDto,
   TeamMembershipDto,
   UpdateClubDto,
   UpdateClubMemberDto,
+  UpdateEventDto,
   UpdateTeamDto,
   UpdateTeamMemberDto,
-  UserDto
+  UserDto,
+  VoteDto
 } from './api.schemas';
 
 import { customFetch } from '../mutator';
@@ -2056,4 +2068,867 @@ export const useInvitationsControllerRedeem = <TError = unknown,
       > => {
       return useMutation(getInvitationsControllerRedeemMutationOptions(options), queryClient);
     }
+
+export const getEventsControllerFindAllUrl = (clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/clubs/${clubId}/teams/${teamId}/events?${stringifiedParams}` : `/clubs/${clubId}/teams/${teamId}/events`
+}
+
+export const eventsControllerFindAll = async (clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams, options?: RequestInit): Promise<EventDto[]> => {
+
+  return customFetch<EventDto[]>(getEventsControllerFindAllUrl(clubId,teamId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getEventsControllerFindAllQueryKey = (clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams,) => {
+    return [
+    `/clubs/${clubId}/teams/${teamId}/events`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getEventsControllerFindAllQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerFindAll>>, TError = unknown>(clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerFindAllQueryKey(clubId,teamId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerFindAll>>> = ({ signal }) => eventsControllerFindAll(clubId,teamId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clubId !== null && clubId !== undefined && teamId !== null && teamId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerFindAllQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerFindAll>>>
+export type EventsControllerFindAllQueryError = unknown
+
+
+export function useEventsControllerFindAll<TData = Awaited<ReturnType<typeof eventsControllerFindAll>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params: undefined |  EventsControllerFindAllParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindAll>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerFindAll>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerFindAll<TData = Awaited<ReturnType<typeof eventsControllerFindAll>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindAll>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerFindAll>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerFindAll<TData = Awaited<ReturnType<typeof eventsControllerFindAll>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerFindAll<TData = Awaited<ReturnType<typeof eventsControllerFindAll>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params?: EventsControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerFindAllQueryOptions(clubId,teamId,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getEventsControllerCreateUrl = (clubId: string,
+    teamId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events`
+}
+
+export const eventsControllerCreate = async (clubId: string,
+    teamId: string,
+    createEventDto: CreateEventDto, options?: RequestInit): Promise<EventDto> => {
+
+  return customFetch<EventDto>(getEventsControllerCreateUrl(clubId,teamId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createEventDto)
+  }
+);}
+
+
+
+
+
+export const getEventsControllerCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreate>>, TError,{clubId: string;teamId: string;data: CreateEventDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreate>>, TError,{clubId: string;teamId: string;data: CreateEventDto}, TContext> => {
+
+const mutationKey = ['eventsControllerCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerCreate>>, {clubId: string;teamId: string;data: CreateEventDto}> = (props) => {
+          const {clubId,teamId,data} = props ?? {};
+
+          return  eventsControllerCreate(clubId,teamId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerCreate>>>
+    export type EventsControllerCreateMutationBody = CreateEventDto
+    export type EventsControllerCreateMutationError = unknown
+
+    export const useEventsControllerCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCreate>>, TError,{clubId: string;teamId: string;data: CreateEventDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerCreate>>,
+        TError,
+        {clubId: string;teamId: string;data: CreateEventDto},
+        TContext
+      > => {
+      return useMutation(getEventsControllerCreateMutationOptions(options), queryClient);
+    }
+
+export const getEventsControllerImportUrl = (clubId: string,
+    teamId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/import`
+}
+
+export const eventsControllerImport = async (clubId: string,
+    teamId: string,
+    eventsControllerImportBody: EventsControllerImportBody, options?: RequestInit): Promise<ImportResultDto> => {
+    const formData = new FormData();
+if(eventsControllerImportBody.file !== undefined) {
+ formData.append(`file`, eventsControllerImportBody.file);
+ }
+if(eventsControllerImportBody.timezone !== undefined) {
+ formData.append(`timezone`, eventsControllerImportBody.timezone);
+ }
+
+  return customFetch<ImportResultDto>(getEventsControllerImportUrl(clubId,teamId),
+  {
+    ...options,
+    method: 'POST'
+    ,
+    body: formData
+  }
+);}
+
+
+
+
+
+export const getEventsControllerImportMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerImport>>, TError,{clubId: string;teamId: string;data: EventsControllerImportBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerImport>>, TError,{clubId: string;teamId: string;data: EventsControllerImportBody}, TContext> => {
+
+const mutationKey = ['eventsControllerImport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerImport>>, {clubId: string;teamId: string;data: EventsControllerImportBody}> = (props) => {
+          const {clubId,teamId,data} = props ?? {};
+
+          return  eventsControllerImport(clubId,teamId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerImportMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerImport>>>
+    export type EventsControllerImportMutationBody = EventsControllerImportBody
+    export type EventsControllerImportMutationError = unknown
+
+    export const useEventsControllerImport = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerImport>>, TError,{clubId: string;teamId: string;data: EventsControllerImportBody}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerImport>>,
+        TError,
+        {clubId: string;teamId: string;data: EventsControllerImportBody},
+        TContext
+      > => {
+      return useMutation(getEventsControllerImportMutationOptions(options), queryClient);
+    }
+
+export const getEventsControllerFindOneUrl = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/${eventId}`
+}
+
+export const eventsControllerFindOne = async (clubId: string,
+    teamId: string,
+    eventId: string, options?: RequestInit): Promise<EventDetailDto> => {
+
+  return customFetch<EventDetailDto>(getEventsControllerFindOneUrl(clubId,teamId,eventId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getEventsControllerFindOneQueryKey = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+    return [
+    `/clubs/${clubId}/teams/${teamId}/events/${eventId}`
+    ] as const;
+    }
+
+
+export const getEventsControllerFindOneQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerFindOne>>, TError = unknown>(clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindOne>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerFindOneQueryKey(clubId,teamId,eventId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerFindOne>>> = ({ signal }) => eventsControllerFindOne(clubId,teamId,eventId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clubId !== null && clubId !== undefined && teamId !== null && teamId !== undefined && eventId !== null && eventId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerFindOneQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerFindOne>>>
+export type EventsControllerFindOneQueryError = unknown
+
+
+export function useEventsControllerFindOne<TData = Awaited<ReturnType<typeof eventsControllerFindOne>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindOne>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerFindOne>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerFindOne>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerFindOne<TData = Awaited<ReturnType<typeof eventsControllerFindOne>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindOne>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerFindOne>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerFindOne>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerFindOne<TData = Awaited<ReturnType<typeof eventsControllerFindOne>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindOne>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerFindOne<TData = Awaited<ReturnType<typeof eventsControllerFindOne>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerFindOne>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerFindOneQueryOptions(clubId,teamId,eventId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getEventsControllerUpdateUrl = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/${eventId}`
+}
+
+export const eventsControllerUpdate = async (clubId: string,
+    teamId: string,
+    eventId: string,
+    updateEventDto: UpdateEventDto, options?: RequestInit): Promise<EventDto> => {
+
+  return customFetch<EventDto>(getEventsControllerUpdateUrl(clubId,teamId,eventId),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(updateEventDto)
+  }
+);}
+
+
+
+
+
+export const getEventsControllerUpdateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdate>>, TError,{clubId: string;teamId: string;eventId: string;data: UpdateEventDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdate>>, TError,{clubId: string;teamId: string;eventId: string;data: UpdateEventDto}, TContext> => {
+
+const mutationKey = ['eventsControllerUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerUpdate>>, {clubId: string;teamId: string;eventId: string;data: UpdateEventDto}> = (props) => {
+          const {clubId,teamId,eventId,data} = props ?? {};
+
+          return  eventsControllerUpdate(clubId,teamId,eventId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerUpdate>>>
+    export type EventsControllerUpdateMutationBody = UpdateEventDto
+    export type EventsControllerUpdateMutationError = unknown
+
+    export const useEventsControllerUpdate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerUpdate>>, TError,{clubId: string;teamId: string;eventId: string;data: UpdateEventDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerUpdate>>,
+        TError,
+        {clubId: string;teamId: string;eventId: string;data: UpdateEventDto},
+        TContext
+      > => {
+      return useMutation(getEventsControllerUpdateMutationOptions(options), queryClient);
+    }
+
+export const getEventsControllerRemoveUrl = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/${eventId}`
+}
+
+export const eventsControllerRemove = async (clubId: string,
+    teamId: string,
+    eventId: string, options?: RequestInit): Promise<EventDto> => {
+
+  return customFetch<EventDto>(getEventsControllerRemoveUrl(clubId,teamId,eventId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getEventsControllerRemoveMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,{clubId: string;teamId: string;eventId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,{clubId: string;teamId: string;eventId: string}, TContext> => {
+
+const mutationKey = ['eventsControllerRemove'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerRemove>>, {clubId: string;teamId: string;eventId: string}> = (props) => {
+          const {clubId,teamId,eventId} = props ?? {};
+
+          return  eventsControllerRemove(clubId,teamId,eventId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerRemove>>>
+
+    export type EventsControllerRemoveMutationError = unknown
+
+    export const useEventsControllerRemove = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRemove>>, TError,{clubId: string;teamId: string;eventId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerRemove>>,
+        TError,
+        {clubId: string;teamId: string;eventId: string},
+        TContext
+      > => {
+      return useMutation(getEventsControllerRemoveMutationOptions(options), queryClient);
+    }
+
+export const getEventsControllerCastVoteUrl = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/${eventId}/vote`
+}
+
+export const eventsControllerCastVote = async (clubId: string,
+    teamId: string,
+    eventId: string,
+    castVoteDto: CastVoteDto, options?: RequestInit): Promise<VoteDto> => {
+
+  return customFetch<VoteDto>(getEventsControllerCastVoteUrl(clubId,teamId,eventId),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(castVoteDto)
+  }
+);}
+
+
+
+
+
+export const getEventsControllerCastVoteMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCastVote>>, TError,{clubId: string;teamId: string;eventId: string;data: CastVoteDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCastVote>>, TError,{clubId: string;teamId: string;eventId: string;data: CastVoteDto}, TContext> => {
+
+const mutationKey = ['eventsControllerCastVote'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerCastVote>>, {clubId: string;teamId: string;eventId: string;data: CastVoteDto}> = (props) => {
+          const {clubId,teamId,eventId,data} = props ?? {};
+
+          return  eventsControllerCastVote(clubId,teamId,eventId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerCastVoteMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerCastVote>>>
+    export type EventsControllerCastVoteMutationBody = CastVoteDto
+    export type EventsControllerCastVoteMutationError = unknown
+
+    export const useEventsControllerCastVote = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerCastVote>>, TError,{clubId: string;teamId: string;eventId: string;data: CastVoteDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerCastVote>>,
+        TError,
+        {clubId: string;teamId: string;eventId: string;data: CastVoteDto},
+        TContext
+      > => {
+      return useMutation(getEventsControllerCastVoteMutationOptions(options), queryClient);
+    }
+
+export const getEventsControllerRetractVoteUrl = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/${eventId}/vote`
+}
+
+export const eventsControllerRetractVote = async (clubId: string,
+    teamId: string,
+    eventId: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getEventsControllerRetractVoteUrl(clubId,teamId,eventId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getEventsControllerRetractVoteMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRetractVote>>, TError,{clubId: string;teamId: string;eventId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRetractVote>>, TError,{clubId: string;teamId: string;eventId: string}, TContext> => {
+
+const mutationKey = ['eventsControllerRetractVote'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof eventsControllerRetractVote>>, {clubId: string;teamId: string;eventId: string}> = (props) => {
+          const {clubId,teamId,eventId} = props ?? {};
+
+          return  eventsControllerRetractVote(clubId,teamId,eventId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EventsControllerRetractVoteMutationResult = NonNullable<Awaited<ReturnType<typeof eventsControllerRetractVote>>>
+
+    export type EventsControllerRetractVoteMutationError = unknown
+
+    export const useEventsControllerRetractVote = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof eventsControllerRetractVote>>, TError,{clubId: string;teamId: string;eventId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof eventsControllerRetractVote>>,
+        TError,
+        {clubId: string;teamId: string;eventId: string},
+        TContext
+      > => {
+      return useMutation(getEventsControllerRetractVoteMutationOptions(options), queryClient);
+    }
+
+export const getEventsControllerListVotesUrl = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/events/${eventId}/votes`
+}
+
+export const eventsControllerListVotes = async (clubId: string,
+    teamId: string,
+    eventId: string, options?: RequestInit): Promise<EventVotesDto> => {
+
+  return customFetch<EventVotesDto>(getEventsControllerListVotesUrl(clubId,teamId,eventId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getEventsControllerListVotesQueryKey = (clubId: string,
+    teamId: string,
+    eventId: string,) => {
+    return [
+    `/clubs/${clubId}/teams/${teamId}/events/${eventId}/votes`
+    ] as const;
+    }
+
+
+export const getEventsControllerListVotesQueryOptions = <TData = Awaited<ReturnType<typeof eventsControllerListVotes>>, TError = unknown>(clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListVotes>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getEventsControllerListVotesQueryKey(clubId,teamId,eventId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof eventsControllerListVotes>>> = ({ signal }) => eventsControllerListVotes(clubId,teamId,eventId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clubId !== null && clubId !== undefined && teamId !== null && teamId !== undefined && eventId !== null && eventId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListVotes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type EventsControllerListVotesQueryResult = NonNullable<Awaited<ReturnType<typeof eventsControllerListVotes>>>
+export type EventsControllerListVotesQueryError = unknown
+
+
+export function useEventsControllerListVotes<TData = Awaited<ReturnType<typeof eventsControllerListVotes>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListVotes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListVotes>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListVotes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListVotes<TData = Awaited<ReturnType<typeof eventsControllerListVotes>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListVotes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof eventsControllerListVotes>>,
+          TError,
+          Awaited<ReturnType<typeof eventsControllerListVotes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useEventsControllerListVotes<TData = Awaited<ReturnType<typeof eventsControllerListVotes>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListVotes>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useEventsControllerListVotes<TData = Awaited<ReturnType<typeof eventsControllerListVotes>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    eventId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof eventsControllerListVotes>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getEventsControllerListVotesQueryOptions(clubId,teamId,eventId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getMeControllerUpcomingEventsUrl = (params?: MeControllerUpcomingEventsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/me/upcoming-events?${stringifiedParams}` : `/me/upcoming-events`
+}
+
+export const meControllerUpcomingEvents = async (params?: MeControllerUpcomingEventsParams, options?: RequestInit): Promise<MyUpcomingEventDto[]> => {
+
+  return customFetch<MyUpcomingEventDto[]>(getMeControllerUpcomingEventsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getMeControllerUpcomingEventsQueryKey = (params?: MeControllerUpcomingEventsParams,) => {
+    return [
+    `/me/upcoming-events`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getMeControllerUpcomingEventsQueryOptions = <TData = Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError = unknown>(params?: MeControllerUpcomingEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getMeControllerUpcomingEventsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof meControllerUpcomingEvents>>> = ({ signal }) => meControllerUpcomingEvents(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type MeControllerUpcomingEventsQueryResult = NonNullable<Awaited<ReturnType<typeof meControllerUpcomingEvents>>>
+export type MeControllerUpcomingEventsQueryError = unknown
+
+
+export function useMeControllerUpcomingEvents<TData = Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError = unknown>(
+ params: undefined |  MeControllerUpcomingEventsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof meControllerUpcomingEvents>>,
+          TError,
+          Awaited<ReturnType<typeof meControllerUpcomingEvents>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useMeControllerUpcomingEvents<TData = Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError = unknown>(
+ params?: MeControllerUpcomingEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof meControllerUpcomingEvents>>,
+          TError,
+          Awaited<ReturnType<typeof meControllerUpcomingEvents>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useMeControllerUpcomingEvents<TData = Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError = unknown>(
+ params?: MeControllerUpcomingEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useMeControllerUpcomingEvents<TData = Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError = unknown>(
+ params?: MeControllerUpcomingEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof meControllerUpcomingEvents>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getMeControllerUpcomingEventsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 

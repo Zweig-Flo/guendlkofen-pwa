@@ -1,0 +1,6 @@
+Datum;Zeit;Gegner;Ort;Heim/Auswärts;Notizen
+10.10.2026;15:00;SV Gültig;Sportplatz Gündlkofen;H;Diese Zeile ist korrekt
+31.02.2026;15:00;FC Kaputtes-Datum;;H;Ungültiges Datum (31. Februar)
+17.10.2026;25:99;FC Kaputte-Zeit;;H;Ungültige Uhrzeit
+24.10.2026;14:00;;Sportplatz;H;Gegner fehlt
+07.11.2026;15:00;FC Falsches-HA;;X;Unbekannter Heim/Auswärts-Wert

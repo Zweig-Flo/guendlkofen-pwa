@@ -6,5 +6,119 @@
     "loggedInAs": "Angemeldet als {{name}}",
     "callApi": "API /me aufrufen",
     "apiError": "Fehler: {{message}}"
+  },
+  "nav": {
+    "home": "Start",
+    "teams": "Teams"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "retry": "Erneut versuchen",
+    "delete": "Löschen",
+    "error": {
+      "loadFailed": "Laden fehlgeschlagen"
+    }
+  },
+  "planner": {
+    "title": "Spielplan",
+    "upcoming": "Anstehend",
+    "past": "Vergangen",
+    "showPast": "Vergangene Spiele anzeigen",
+    "versus": "gegen",
+    "myGames": {
+      "title": "Meine Spiele"
+    },
+    "teams": {
+      "title": "Meine Teams",
+      "open": "Spielplan öffnen"
+    },
+    "event": {
+      "detailTitle": "Spieldetails",
+      "cancelled": "Abgesagt",
+      "location": "Ort",
+      "notes": "Notizen",
+      "homeAway": {
+        "HOME": "Heim",
+        "AWAY": "Auswärts",
+        "NEUTRAL": "Neutral"
+      }
+    },
+    "vote": {
+      "yes": "Dabei",
+      "no": "Absagen",
+      "retract": "Zurückziehen",
+      "closed": "Abstimmung geschlossen",
+      "myVote": "Deine Antwort",
+      "failed": "Deine Stimme konnte nicht gespeichert werden"
+    },
+    "tally": {
+      "yes": "{{count}} dabei",
+      "no": "{{count}} abgesagt",
+      "notVoted": "{{count}} offen"
+    },
+    "votes": {
+      "title": "Abstimmung",
+      "yesGroup": "Zugesagt",
+      "noGroup": "Abgesagt",
+      "notVotedGroup": "Noch keine Antwort",
+      "empty": "Noch keine Stimmen"
+    },
+    "admin": {
+      "create": "Spiel anlegen",
+      "edit": "Bearbeiten",
+      "cancel": "Spiel absagen",
+      "reactivate": "Absage aufheben",
+      "delete": "Löschen",
+      "deleteConfirm": "Dieses Spiel wirklich löschen? Alle Stimmen gehen verloren.",
+      "deleted": "Spiel gelöscht",
+      "cancelled": "Spiel abgesagt",
+      "reactivated": "Absage aufgehoben"
+    },
+    "form": {
+      "createTitle": "Spiel anlegen",
+      "editTitle": "Spiel bearbeiten",
+      "startsAt": "Anpfiff",
+      "opponent": "Gegner",
+      "opponentPlaceholder": "z. B. SV Musterhausen",
+      "location": "Ort",
+      "homeAway": "Heim/Auswärts",
+      "notes": "Notizen",
+      "saved": "Gespeichert",
+      "required": "Pflichtfeld",
+      "failed": "Speichern fehlgeschlagen"
+    },
+    "import": {
+      "title": "CSV-Import",
+      "intro": "Spiele aus einer CSV-Datei (Spalten: Datum, Zeit, Gegner, Ort, Heim/Auswärts, Notizen) importieren.",
+      "pick": "CSV-Datei auswählen",
+      "upload": "Hochladen",
+      "result": "Import-Ergebnis",
+      "total": "Zeilen gesamt",
+      "imported": "Neu angelegt",
+      "updated": "Aktualisiert",
+      "skipped": "Übersprungen",
+      "errors": "Fehler",
+      "rowErrorsTitle": "Fehlerhafte Zeilen",
+      "rowColumn": "Zeile",
+      "fieldColumn": "Feld",
+      "messageColumn": "Meldung",
+      "failed": "Import fehlgeschlagen",
+      "error": {
+        "badDate": "Ungültiges Datum",
+        "badTime": "Ungültige Uhrzeit",
+        "missingDate": "Datum fehlt",
+        "missingTime": "Uhrzeit fehlt",
+        "missingOpponent": "Gegner fehlt",
+        "badHomeAway": "Ungültiger Wert für Heim/Auswärts",
+        "generic": "Zeile konnte nicht verarbeitet werden"
+      }
+    },
+    "empty": {
+      "upcoming": "Keine anstehenden Spiele.",
+      "team": "Für dieses Team gibt es noch keine Spiele.",
+      "noTeams": "Du bist noch in keinem Team."
+    }
   }
 }

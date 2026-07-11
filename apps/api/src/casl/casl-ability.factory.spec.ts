@@ -133,6 +133,30 @@ describe('CaslAbilityFactory', () => {
       ).toBe(false);
     });
 
+    it('can manage every team event of club A and read its votes', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const eventA1 = { teamId: 'team-a1', team: { clubId: 'club-a' } };
+      const eventB1 = { teamId: 'team-b1', team: { clubId: 'club-b' } };
+      expect(ability.can('create', toSubject('Event', eventA1))).toBe(true);
+      expect(ability.can('update', toSubject('Event', eventA1))).toBe(true);
+      expect(ability.can('delete', toSubject('Event', eventA1))).toBe(true);
+      expect(ability.can('create', toSubject('Event', eventB1))).toBe(false);
+
+      expect(
+        ability.can(
+          'read',
+          toSubject('Vote', { event: { team: { clubId: 'club-a' } } }),
+        ),
+      ).toBe(true);
+      expect(
+        ability.can(
+          'read',
+          toSubject('Vote', { event: { team: { clubId: 'club-b' } } }),
+        ),
+      ).toBe(false);
+    });
+
     it('can manage invitations of club A only', async () => {
       const ability = await factory.createForUser(makeUser());
 
@@ -212,6 +236,20 @@ describe('CaslAbilityFactory', () => {
       expect(ability.can('read', toSubject('Team', teamB1))).toBe(false);
     });
 
+    it('has no planner access — events/votes are team-scoped, not club-wide', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const eventA1 = { teamId: 'team-a1', team: { clubId: 'club-a' } };
+      expect(ability.can('read', toSubject('Event', eventA1))).toBe(false);
+      expect(ability.can('vote', toSubject('Event', eventA1))).toBe(false);
+      expect(
+        ability.can(
+          'read',
+          toSubject('Vote', { event: { teamId: 'team-a1' } }),
+        ),
+      ).toBe(false);
+    });
+
     it('has no invitation access at all', async () => {
       const ability = await factory.createForUser(makeUser());
 
@@ -286,6 +324,26 @@ describe('CaslAbilityFactory', () => {
         ability.can('update', toSubject('TeamMembership', otherTeamMembership)),
       ).toBe(false);
     });
+
+    it('fully manages team A1 events and reads its votes', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const eventA1 = { teamId: 'team-a1' };
+      const eventA2 = { teamId: 'team-a2' };
+      expect(ability.can('create', toSubject('Event', eventA1))).toBe(true);
+      expect(ability.can('update', toSubject('Event', eventA1))).toBe(true);
+      expect(ability.can('delete', toSubject('Event', eventA1))).toBe(true);
+      // Only reads (not manages) the other team's events, via club membership.
+      expect(ability.can('read', toSubject('Event', eventA2))).toBe(false);
+      expect(ability.can('update', toSubject('Event', eventA2))).toBe(false);
+
+      expect(
+        ability.can(
+          'read',
+          toSubject('Vote', { event: { teamId: 'team-a1' } }),
+        ),
+      ).toBe(true);
+    });
   });
 
   describe('player of team A1 (member of club A)', () => {
@@ -332,6 +390,54 @@ describe('CaslAbilityFactory', () => {
             team: { clubId: 'club-a' },
           }),
         ),
+      ).toBe(false);
+    });
+
+    it('reads and votes on own team events but not other teams', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      expect(
+        ability.can('read', toSubject('Event', { teamId: 'team-a1' })),
+      ).toBe(true);
+      expect(
+        ability.can('vote', toSubject('Event', { teamId: 'team-a1' })),
+      ).toBe(true);
+      // A sibling team in the same club they are not on: no planner access.
+      expect(
+        ability.can('read', toSubject('Event', { teamId: 'team-a2' })),
+      ).toBe(false);
+      expect(
+        ability.can('vote', toSubject('Event', { teamId: 'team-a2' })),
+      ).toBe(false);
+      // Another club entirely.
+      expect(
+        ability.can('vote', toSubject('Event', { teamId: 'team-b1' })),
+      ).toBe(false);
+    });
+
+    it('cannot create, edit or delete events (that is admin territory)', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const eventA1 = { teamId: 'team-a1' };
+      expect(ability.can('create', toSubject('Event', eventA1))).toBe(false);
+      expect(ability.can('update', toSubject('Event', eventA1))).toBe(false);
+      expect(ability.can('delete', toSubject('Event', eventA1))).toBe(false);
+    });
+
+    it('reads teammates votes but only writes its own vote row', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      expect(
+        ability.can(
+          'read',
+          toSubject('Vote', { event: { teamId: 'team-a1' } }),
+        ),
+      ).toBe(true);
+      expect(
+        ability.can('manage', toSubject('Vote', { userId: 'user-1' })),
+      ).toBe(true);
+      expect(
+        ability.can('update', toSubject('Vote', { userId: 'user-2' })),
       ).toBe(false);
     });
   });

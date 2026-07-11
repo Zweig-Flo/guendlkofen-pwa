@@ -6,5 +6,119 @@
     "loggedInAs": "Logged in as {{name}}",
     "callApi": "Call API /me",
     "apiError": "Error: {{message}}"
+  },
+  "nav": {
+    "home": "Home",
+    "teams": "Teams"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Try again",
+    "delete": "Delete",
+    "error": {
+      "loadFailed": "Failed to load"
+    }
+  },
+  "planner": {
+    "title": "Planner",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "showPast": "Show past games",
+    "versus": "vs",
+    "myGames": {
+      "title": "My games"
+    },
+    "teams": {
+      "title": "My teams",
+      "open": "Open planner"
+    },
+    "event": {
+      "detailTitle": "Game details",
+      "cancelled": "Cancelled",
+      "location": "Location",
+      "notes": "Notes",
+      "homeAway": {
+        "HOME": "Home",
+        "AWAY": "Away",
+        "NEUTRAL": "Neutral"
+      }
+    },
+    "vote": {
+      "yes": "I'm in",
+      "no": "Can't make it",
+      "retract": "Retract",
+      "closed": "Voting has closed",
+      "myVote": "Your answer",
+      "failed": "Your vote could not be saved"
+    },
+    "tally": {
+      "yes": "{{count}} in",
+      "no": "{{count}} out",
+      "notVoted": "{{count}} pending"
+    },
+    "votes": {
+      "title": "Votes",
+      "yesGroup": "In",
+      "noGroup": "Out",
+      "notVotedGroup": "No answer yet",
+      "empty": "No votes yet"
+    },
+    "admin": {
+      "create": "Add game",
+      "edit": "Edit",
+      "cancel": "Cancel game",
+      "reactivate": "Un-cancel",
+      "delete": "Delete",
+      "deleteConfirm": "Really delete this game? All votes will be lost.",
+      "deleted": "Game deleted",
+      "cancelled": "Game cancelled",
+      "reactivated": "Cancellation removed"
+    },
+    "form": {
+      "createTitle": "Add game",
+      "editTitle": "Edit game",
+      "startsAt": "Kickoff",
+      "opponent": "Opponent",
+      "opponentPlaceholder": "e.g. SV Musterhausen",
+      "location": "Location",
+      "homeAway": "Home/Away",
+      "notes": "Notes",
+      "saved": "Saved",
+      "required": "Required",
+      "failed": "Saving failed"
+    },
+    "import": {
+      "title": "CSV import",
+      "intro": "Import games from a CSV file (columns: date, time, opponent, location, home/away, notes).",
+      "pick": "Choose CSV file",
+      "upload": "Upload",
+      "result": "Import result",
+      "total": "Total rows",
+      "imported": "Created",
+      "updated": "Updated",
+      "skipped": "Skipped",
+      "errors": "Errors",
+      "rowErrorsTitle": "Rows with errors",
+      "rowColumn": "Row",
+      "fieldColumn": "Field",
+      "messageColumn": "Message",
+      "failed": "Import failed",
+      "error": {
+        "badDate": "Invalid date",
+        "badTime": "Invalid time",
+        "missingDate": "Date missing",
+        "missingTime": "Time missing",
+        "missingOpponent": "Opponent missing",
+        "badHomeAway": "Invalid home/away value",
+        "generic": "Row could not be processed"
+      }
+    },
+    "empty": {
+      "upcoming": "No upcoming games.",
+      "team": "This team has no games yet.",
+      "noTeams": "You're not a member of any team yet."
+    }
   }
 }

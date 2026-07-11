@@ -354,7 +354,440 @@ export interface RedeemInvitationDto {
   token: string;
 }
 
+/**
+ * The caller's own vote, or null if they have not voted
+ * @nullable
+ */
+export type VoteSummaryDtoMyVote = typeof VoteSummaryDtoMyVote[keyof typeof VoteSummaryDtoMyVote] | null;
+
+
+export const VoteSummaryDtoMyVote = {
+  YES: 'YES',
+  NO: 'NO',
+} as const;
+
+export interface VoteSummaryDto {
+  /** Number of YES votes */
+  yesCount: number;
+  /** Number of NO votes */
+  noCount: number;
+  /** Team members who have not voted yet */
+  notVotedCount: number;
+  /**
+     * The caller's own vote, or null if they have not voted
+     * @nullable
+     */
+  myVote: VoteSummaryDtoMyVote;
+}
+
+/**
+ * Home / away / neutral
+ */
+export type EventDtoHomeAway = typeof EventDtoHomeAway[keyof typeof EventDtoHomeAway];
+
+
+export const EventDtoHomeAway = {
+  HOME: 'HOME',
+  AWAY: 'AWAY',
+  NEUTRAL: 'NEUTRAL',
+} as const;
+
+/**
+ * Event status
+ */
+export type EventDtoStatus = typeof EventDtoStatus[keyof typeof EventDtoStatus];
+
+
+export const EventDtoStatus = {
+  SCHEDULED: 'SCHEDULED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+/**
+ * How the event was created
+ */
+export type EventDtoSource = typeof EventDtoSource[keyof typeof EventDtoSource];
+
+
+export const EventDtoSource = {
+  MANUAL: 'MANUAL',
+  IMPORT: 'IMPORT',
+} as const;
+
+export interface EventDto {
+  /** Event id */
+  id: string;
+  /** Id of the team the event belongs to */
+  teamId: string;
+  /** Kickoff time (UTC) */
+  startsAt: string;
+  /** Opponent */
+  opponent: string;
+  /**
+     * Venue / address
+     * @nullable
+     */
+  location: string | null;
+  /** Home / away / neutral */
+  homeAway: EventDtoHomeAway;
+  /**
+     * Free-text meta
+     * @nullable
+     */
+  notes: string | null;
+  /** Event status */
+  status: EventDtoStatus;
+  /** How the event was created */
+  source: EventDtoSource;
+  /** Vote tally + caller vote */
+  summary: VoteSummaryDto;
+}
+
+/**
+ * Home / away / neutral venue
+ */
+export type CreateEventDtoHomeAway = typeof CreateEventDtoHomeAway[keyof typeof CreateEventDtoHomeAway];
+
+
+export const CreateEventDtoHomeAway = {
+  HOME: 'HOME',
+  AWAY: 'AWAY',
+  NEUTRAL: 'NEUTRAL',
+} as const;
+
+export interface CreateEventDto {
+  /** Kickoff time, ISO 8601 (stored as UTC) */
+  startsAt: string;
+  /** Opponent — free text; required, a game needs one */
+  opponent: string;
+  /** Venue / address */
+  location?: string;
+  /** Home / away / neutral venue */
+  homeAway?: CreateEventDtoHomeAway;
+  /** Free-text meta (meeting time, kit colour, …) */
+  notes?: string;
+}
+
+export interface ImportRowErrorDto {
+  /** 1-based index of the offending data row (header excluded) */
+  row: number;
+  /** Canonical field the error relates to, if applicable */
+  field?: string;
+  /** i18n key or plain-English message for the failure */
+  message: string;
+  /** The raw row content, for the user to locate it */
+  raw: string;
+}
+
+export interface ImportResultDto {
+  /** Number of data rows parsed */
+  totalRows: number;
+  /** Newly created events */
+  imported: number;
+  /** Matched an existing importKey and were changed */
+  updated: number;
+  /** Duplicates / unchanged rows (no-op) */
+  skipped: number;
+  /** Number of rows that failed validation */
+  errorCount: number;
+  /** Per-row errors */
+  errors: ImportRowErrorDto[];
+}
+
+/**
+ * The vote
+ */
+export type VoteDtoChoice = typeof VoteDtoChoice[keyof typeof VoteDtoChoice];
+
+
+export const VoteDtoChoice = {
+  YES: 'YES',
+  NO: 'NO',
+} as const;
+
+export interface VoteDto {
+  /** Vote id */
+  id: string;
+  /** Id of the event voted on */
+  eventId: string;
+  /** Id of the voting user */
+  userId: string;
+  /** The vote */
+  choice: VoteDtoChoice;
+  /** When the vote was last cast or changed */
+  updatedAt: string;
+}
+
+/**
+ * Home / away / neutral
+ */
+export type EventDetailDtoHomeAway = typeof EventDetailDtoHomeAway[keyof typeof EventDetailDtoHomeAway];
+
+
+export const EventDetailDtoHomeAway = {
+  HOME: 'HOME',
+  AWAY: 'AWAY',
+  NEUTRAL: 'NEUTRAL',
+} as const;
+
+/**
+ * Event status
+ */
+export type EventDetailDtoStatus = typeof EventDetailDtoStatus[keyof typeof EventDetailDtoStatus];
+
+
+export const EventDetailDtoStatus = {
+  SCHEDULED: 'SCHEDULED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+/**
+ * How the event was created
+ */
+export type EventDetailDtoSource = typeof EventDetailDtoSource[keyof typeof EventDetailDtoSource];
+
+
+export const EventDetailDtoSource = {
+  MANUAL: 'MANUAL',
+  IMPORT: 'IMPORT',
+} as const;
+
+export interface EventDetailDto {
+  /** Event id */
+  id: string;
+  /** Id of the team the event belongs to */
+  teamId: string;
+  /** Kickoff time (UTC) */
+  startsAt: string;
+  /** Opponent */
+  opponent: string;
+  /**
+     * Venue / address
+     * @nullable
+     */
+  location: string | null;
+  /** Home / away / neutral */
+  homeAway: EventDetailDtoHomeAway;
+  /**
+     * Free-text meta
+     * @nullable
+     */
+  notes: string | null;
+  /** Event status */
+  status: EventDetailDtoStatus;
+  /** How the event was created */
+  source: EventDetailDtoSource;
+  /** Vote tally + caller vote */
+  summary: VoteSummaryDto;
+  /** Every teammate's vote for this event */
+  votes: VoteDto[];
+}
+
+/**
+ * Home / away / neutral venue
+ */
+export type UpdateEventDtoHomeAway = typeof UpdateEventDtoHomeAway[keyof typeof UpdateEventDtoHomeAway];
+
+
+export const UpdateEventDtoHomeAway = {
+  HOME: 'HOME',
+  AWAY: 'AWAY',
+  NEUTRAL: 'NEUTRAL',
+} as const;
+
+/**
+ * Event status; set to CANCELLED to cancel the game
+ */
+export type UpdateEventDtoStatus = typeof UpdateEventDtoStatus[keyof typeof UpdateEventDtoStatus];
+
+
+export const UpdateEventDtoStatus = {
+  SCHEDULED: 'SCHEDULED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export interface UpdateEventDto {
+  /** Kickoff time, ISO 8601 (stored as UTC) */
+  startsAt?: string;
+  /** Opponent — free text; required, a game needs one */
+  opponent?: string;
+  /** Venue / address */
+  location?: string;
+  /** Home / away / neutral venue */
+  homeAway?: UpdateEventDtoHomeAway;
+  /** Free-text meta (meeting time, kit colour, …) */
+  notes?: string;
+  /** Event status; set to CANCELLED to cancel the game */
+  status?: UpdateEventDtoStatus;
+}
+
+/**
+ * The caller's availability for this game
+ */
+export type CastVoteDtoChoice = typeof CastVoteDtoChoice[keyof typeof CastVoteDtoChoice];
+
+
+export const CastVoteDtoChoice = {
+  YES: 'YES',
+  NO: 'NO',
+} as const;
+
+export interface CastVoteDto {
+  /** The caller's availability for this game */
+  choice: CastVoteDtoChoice;
+}
+
+/**
+ * The vote
+ */
+export type TeammateVoteDtoChoice = typeof TeammateVoteDtoChoice[keyof typeof TeammateVoteDtoChoice];
+
+
+export const TeammateVoteDtoChoice = {
+  YES: 'YES',
+  NO: 'NO',
+} as const;
+
+export interface TeammateVoteDto {
+  /** Id of the voting user */
+  userId: string;
+  /**
+     * Display name of the voter (for avatars / initials)
+     * @nullable
+     */
+  userName: string | null;
+  /** The vote */
+  choice: TeammateVoteDtoChoice;
+}
+
+export interface EventVotesDto {
+  /** Id of the event */
+  eventId: string;
+  /** Teammates' votes for this event */
+  votes: TeammateVoteDto[];
+  /** Vote tally + caller vote */
+  summary: VoteSummaryDto;
+}
+
+export interface MyUpcomingTeamDto {
+  /** Team id */
+  id: string;
+  /** Team name */
+  name: string;
+  /** Sport of the team */
+  sport: string;
+}
+
+/**
+ * Home / away / neutral
+ */
+export type MyUpcomingEventDtoHomeAway = typeof MyUpcomingEventDtoHomeAway[keyof typeof MyUpcomingEventDtoHomeAway];
+
+
+export const MyUpcomingEventDtoHomeAway = {
+  HOME: 'HOME',
+  AWAY: 'AWAY',
+  NEUTRAL: 'NEUTRAL',
+} as const;
+
+/**
+ * Event status
+ */
+export type MyUpcomingEventDtoStatus = typeof MyUpcomingEventDtoStatus[keyof typeof MyUpcomingEventDtoStatus];
+
+
+export const MyUpcomingEventDtoStatus = {
+  SCHEDULED: 'SCHEDULED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+/**
+ * How the event was created
+ */
+export type MyUpcomingEventDtoSource = typeof MyUpcomingEventDtoSource[keyof typeof MyUpcomingEventDtoSource];
+
+
+export const MyUpcomingEventDtoSource = {
+  MANUAL: 'MANUAL',
+  IMPORT: 'IMPORT',
+} as const;
+
+export interface MyUpcomingEventDto {
+  /** Event id */
+  id: string;
+  /** Id of the team the event belongs to */
+  teamId: string;
+  /** Kickoff time (UTC) */
+  startsAt: string;
+  /** Opponent */
+  opponent: string;
+  /**
+     * Venue / address
+     * @nullable
+     */
+  location: string | null;
+  /** Home / away / neutral */
+  homeAway: MyUpcomingEventDtoHomeAway;
+  /**
+     * Free-text meta
+     * @nullable
+     */
+  notes: string | null;
+  /** Event status */
+  status: MyUpcomingEventDtoStatus;
+  /** How the event was created */
+  source: MyUpcomingEventDtoSource;
+  /** Vote tally + caller vote */
+  summary: VoteSummaryDto;
+  /** The team this game belongs to */
+  team: MyUpcomingTeamDto;
+  /** Id of the club the team belongs to */
+  clubId: string;
+}
+
 export type InvitationsControllerPreviewParams = {
 token: string;
+};
+
+export type EventsControllerFindAllParams = {
+/**
+ * Only events at/after this instant (ISO 8601)
+ */
+from?: string;
+/**
+ * Only events at/before this instant (ISO 8601)
+ */
+to?: string;
+/**
+ * Include events whose kickoff is already in the past
+ */
+includePast?: boolean;
+/**
+ * Filter by event status
+ */
+status?: EventsControllerFindAllStatus;
+};
+
+export type EventsControllerFindAllStatus = typeof EventsControllerFindAllStatus[keyof typeof EventsControllerFindAllStatus];
+
+
+export const EventsControllerFindAllStatus = {
+  SCHEDULED: 'SCHEDULED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type EventsControllerImportBody = {
+  file?: Blob;
+  /** IANA timezone the CSV's date/time cells are written in — send the uploader's browser zone (Intl.DateTimeFormat().resolvedOptions().timeZone). Missing or invalid values fall back to Europe/Berlin. */
+  timezone?: string;
+};
+
+export type MeControllerUpcomingEventsParams = {
+/**
+ * Look-ahead window in days from now
+ * @minimum 1
+ * @maximum 90
+ */
+days?: number;
 };
 

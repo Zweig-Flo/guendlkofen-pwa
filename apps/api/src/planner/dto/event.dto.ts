@@ -8,7 +8,10 @@ import {
 import { VoteSummaryDto } from './vote-summary.dto';
 
 export class EventDto {
-  @ApiProperty({ description: 'Event id', example: 'cmrf55tba0005wftfb78qh899' })
+  @ApiProperty({
+    description: 'Event id',
+    example: 'cmrf55tba0005wftfb78qh899',
+  })
   id: string;
 
   @ApiProperty({
@@ -51,7 +54,10 @@ export class EventDto {
   @ApiProperty({ description: 'How the event was created', enum: EventSource })
   source: EventSource;
 
-  @ApiProperty({ description: 'Vote tally + caller vote', type: VoteSummaryDto })
+  @ApiProperty({
+    description: 'Vote tally + caller vote',
+    type: VoteSummaryDto,
+  })
   summary: VoteSummaryDto;
 
   static fromEntity(event: Event, summary: VoteSummaryDto): EventDto {

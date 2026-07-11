@@ -13,12 +13,7 @@ import type {
 } from '../generated/prisma/client';
 
 export type Action =
-  | 'manage'
-  | 'create'
-  | 'read'
-  | 'update'
-  | 'delete'
-  | 'vote';
+  'manage' | 'create' | 'read' | 'update' | 'delete' | 'vote';
 
 export type AppSubjects =
   | 'all'

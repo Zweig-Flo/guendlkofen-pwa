@@ -250,7 +250,12 @@ auto-detection — helpful for German exports that use `;`. Parse with
 | `homeAway` | no | `heim/auswärts`, `heimauswaerts`, `h/a` | `home/away`, `homeaway`, `h/a` | `H`/`Heim`/`Home` → HOME; `A`/`Auswärts`/`Away` → AWAY; `N`/`Neutral` → NEUTRAL; blank → HOME |
 | `notes` | no | `notizen`, `hinweis` | `notes`, `comment` | free text |
 
-`date`+`time` are combined into `startsAt` (interpret in **Europe/Berlin**, store UTC).
+`date`+`time` are combined into `startsAt` and stored as UTC. They are interpreted in the
+**importer's browser timezone**: the frontend sends `Intl.DateTimeFormat().resolvedOptions().timeZone`
+(an IANA name) as a `timezone` field with the upload; the API validates it and falls back to
+`Europe/Berlin` when missing/invalid. Conversion MUST be DST-correct: resolve the UTC offset
+**per row at the row's own date** (IANA zone rules), never from the import moment — a mixed
+winter+summer CSV must convert each game with its date's offset (CET +1 vs CEST +2).
 
 **Dedupe / upsert (`importKey`).** For each row compute
 `importKey = sha1(dateISO + '|' + opponent.trim().toLowerCase())` — **date only, no time** —
@@ -415,5 +420,7 @@ on a game, see the tally update optimistically and persist after refresh.
    allow retract (returns to notVoted) — mirrors real "I don't know yet" without a maybe option.
 6. **`/me/upcoming-events` window** — default 30 days, max 90. *Default:* as stated; make it a
    query param so the home screen can tune it.
-7. **Timezone** — assume all clubs Europe/Berlin for CSV `date+time`? *Default:* yes for v1
-   (single-region product); store UTC. Revisit if clubs span timezones.
+7. **Timezone** — DECIDED (Florian, 2026-07-11): use the **importing browser's timezone**,
+   sent by the frontend as an IANA name with the upload (fallback `Europe/Berlin`); store UTC.
+   DST is handled by resolving each row's offset at the row's own date (see §3) — the moment
+   of import never affects the stored times. Per-club timezone override stays a later option.

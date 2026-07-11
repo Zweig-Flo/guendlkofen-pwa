@@ -35,7 +35,9 @@ const INVITATION_TTL_DAYS = 14;
 
 export type InvitationWithRelations = Invitation & {
   club: Club;
-  invitedBy: User;
+  // Nullable: the inviter relation is `onDelete: SetNull`, so the invitation
+  // audit trail survives inviter deletion. The InvitationDto handles null.
+  invitedBy: User | null;
   teamAssignments: (InvitationTeamAssignment & { team: Team })[];
 };
 

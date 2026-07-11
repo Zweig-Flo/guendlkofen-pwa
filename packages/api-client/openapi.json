@@ -1174,6 +1174,635 @@
           "invitations"
         ]
       }
+    },
+    "/clubs/{clubId}/teams/{teamId}/events": {
+      "get": {
+        "operationId": "EventsController_findAll",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "Only events at/after this instant (ISO 8601)",
+            "schema": {
+              "example": "2026-09-01T00:00:00.000Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "Only events at/before this instant (ISO 8601)",
+            "schema": {
+              "example": "2026-12-31T00:00:00.000Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "includePast",
+            "required": false,
+            "in": "query",
+            "description": "Include events whose kickoff is already in the past",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by event status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SCHEDULED",
+                "CANCELLED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      },
+      "post": {
+        "operationId": "EventsController_create",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/events/import": {
+      "post": {
+        "operationId": "EventsController_import",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "description": "IANA timezone the CSV's date/time cells are written in — send the uploader's browser zone (Intl.DateTimeFormat().resolvedOptions().timeZone). Missing or invalid values fall back to Europe/Berlin.",
+                    "example": "Europe/Berlin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResultDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/events/{eventId}": {
+      "get": {
+        "operationId": "EventsController_findOne",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      },
+      "patch": {
+        "operationId": "EventsController_update",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      },
+      "delete": {
+        "operationId": "EventsController_remove",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/events/{eventId}/vote": {
+      "put": {
+        "operationId": "EventsController_castVote",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CastVoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoteDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      },
+      "delete": {
+        "operationId": "EventsController_retractVote",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/events/{eventId}/votes": {
+      "get": {
+        "operationId": "EventsController_listVotes",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventVotesDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      }
+    },
+    "/me/upcoming-events": {
+      "get": {
+        "operationId": "MeController_upcomingEvents",
+        "parameters": [
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Look-ahead window in days from now",
+            "schema": {
+              "minimum": 1,
+              "maximum": 90,
+              "default": 30,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MyUpcomingEventDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "planner"
+        ]
+      }
     }
   },
   "info": {
@@ -1789,6 +2418,613 @@
         },
         "required": [
           "token"
+        ]
+      },
+      "VoteSummaryDto": {
+        "type": "object",
+        "properties": {
+          "yesCount": {
+            "type": "number",
+            "description": "Number of YES votes",
+            "example": 3
+          },
+          "noCount": {
+            "type": "number",
+            "description": "Number of NO votes",
+            "example": 1
+          },
+          "notVotedCount": {
+            "type": "number",
+            "description": "Team members who have not voted yet",
+            "example": 2
+          },
+          "myVote": {
+            "type": "string",
+            "description": "The caller's own vote, or null if they have not voted",
+            "enum": [
+              "YES",
+              "NO"
+            ],
+            "nullable": true,
+            "example": "YES"
+          }
+        },
+        "required": [
+          "yesCount",
+          "noCount",
+          "notVotedCount",
+          "myVote"
+        ]
+      },
+      "EventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event id",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "Id of the team the event belongs to",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Kickoff time (UTC)",
+            "example": "2026-09-12T13:00:00.000Z"
+          },
+          "opponent": {
+            "type": "string",
+            "description": "Opponent",
+            "example": "SV Musterhausen"
+          },
+          "location": {
+            "type": "string",
+            "description": "Venue / address",
+            "example": "Sportplatz Gündlkofen",
+            "nullable": true
+          },
+          "homeAway": {
+            "type": "string",
+            "description": "Home / away / neutral",
+            "enum": [
+              "HOME",
+              "AWAY",
+              "NEUTRAL"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-text meta",
+            "example": "Treffen 14:15",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Event status",
+            "enum": [
+              "SCHEDULED",
+              "CANCELLED"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "How the event was created",
+            "enum": [
+              "MANUAL",
+              "IMPORT"
+            ]
+          },
+          "summary": {
+            "description": "Vote tally + caller vote",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteSummaryDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "teamId",
+          "startsAt",
+          "opponent",
+          "location",
+          "homeAway",
+          "notes",
+          "status",
+          "source",
+          "summary"
+        ]
+      },
+      "CreateEventDto": {
+        "type": "object",
+        "properties": {
+          "startsAt": {
+            "type": "string",
+            "description": "Kickoff time, ISO 8601 (stored as UTC)",
+            "example": "2026-09-12T13:00:00.000Z"
+          },
+          "opponent": {
+            "type": "string",
+            "description": "Opponent — free text; required, a game needs one",
+            "example": "SV Musterhausen"
+          },
+          "location": {
+            "type": "string",
+            "description": "Venue / address",
+            "example": "Sportplatz Gündlkofen"
+          },
+          "homeAway": {
+            "type": "string",
+            "description": "Home / away / neutral venue",
+            "enum": [
+              "HOME",
+              "AWAY",
+              "NEUTRAL"
+            ],
+            "default": "HOME"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-text meta (meeting time, kit colour, …)",
+            "example": "Treffen 14:15"
+          }
+        },
+        "required": [
+          "startsAt",
+          "opponent"
+        ]
+      },
+      "ImportRowErrorDto": {
+        "type": "object",
+        "properties": {
+          "row": {
+            "type": "number",
+            "description": "1-based index of the offending data row (header excluded)",
+            "example": 2
+          },
+          "field": {
+            "type": "string",
+            "description": "Canonical field the error relates to, if applicable",
+            "example": "date"
+          },
+          "message": {
+            "type": "string",
+            "description": "i18n key or plain-English message for the failure",
+            "example": "import.error.badDate"
+          },
+          "raw": {
+            "type": "string",
+            "description": "The raw row content, for the user to locate it",
+            "example": "2026-13-40;15:00;SV Musterhausen;;Heim;"
+          }
+        },
+        "required": [
+          "row",
+          "message",
+          "raw"
+        ]
+      },
+      "ImportResultDto": {
+        "type": "object",
+        "properties": {
+          "totalRows": {
+            "type": "number",
+            "description": "Number of data rows parsed",
+            "example": 3
+          },
+          "imported": {
+            "type": "number",
+            "description": "Newly created events",
+            "example": 2
+          },
+          "updated": {
+            "type": "number",
+            "description": "Matched an existing importKey and were changed",
+            "example": 1
+          },
+          "skipped": {
+            "type": "number",
+            "description": "Duplicates / unchanged rows (no-op)",
+            "example": 0
+          },
+          "errorCount": {
+            "type": "number",
+            "description": "Number of rows that failed validation",
+            "example": 0
+          },
+          "errors": {
+            "description": "Per-row errors",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImportRowErrorDto"
+            }
+          }
+        },
+        "required": [
+          "totalRows",
+          "imported",
+          "updated",
+          "skipped",
+          "errorCount",
+          "errors"
+        ]
+      },
+      "VoteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Vote id",
+            "example": "cmrf55tba0006wftfb78qh900"
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Id of the event voted on",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Id of the voting user",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "choice": {
+            "type": "string",
+            "description": "The vote",
+            "enum": [
+              "YES",
+              "NO"
+            ]
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the vote was last cast or changed",
+            "example": "2026-09-01T09:30:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "eventId",
+          "userId",
+          "choice",
+          "updatedAt"
+        ]
+      },
+      "EventDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event id",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "Id of the team the event belongs to",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Kickoff time (UTC)",
+            "example": "2026-09-12T13:00:00.000Z"
+          },
+          "opponent": {
+            "type": "string",
+            "description": "Opponent",
+            "example": "SV Musterhausen"
+          },
+          "location": {
+            "type": "string",
+            "description": "Venue / address",
+            "example": "Sportplatz Gündlkofen",
+            "nullable": true
+          },
+          "homeAway": {
+            "type": "string",
+            "description": "Home / away / neutral",
+            "enum": [
+              "HOME",
+              "AWAY",
+              "NEUTRAL"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-text meta",
+            "example": "Treffen 14:15",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Event status",
+            "enum": [
+              "SCHEDULED",
+              "CANCELLED"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "How the event was created",
+            "enum": [
+              "MANUAL",
+              "IMPORT"
+            ]
+          },
+          "summary": {
+            "description": "Vote tally + caller vote",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteSummaryDto"
+              }
+            ]
+          },
+          "votes": {
+            "description": "Every teammate's vote for this event",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VoteDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "teamId",
+          "startsAt",
+          "opponent",
+          "location",
+          "homeAway",
+          "notes",
+          "status",
+          "source",
+          "summary",
+          "votes"
+        ]
+      },
+      "UpdateEventDto": {
+        "type": "object",
+        "properties": {
+          "startsAt": {
+            "type": "string",
+            "description": "Kickoff time, ISO 8601 (stored as UTC)",
+            "example": "2026-09-12T13:00:00.000Z"
+          },
+          "opponent": {
+            "type": "string",
+            "description": "Opponent — free text; required, a game needs one",
+            "example": "SV Musterhausen"
+          },
+          "location": {
+            "type": "string",
+            "description": "Venue / address",
+            "example": "Sportplatz Gündlkofen"
+          },
+          "homeAway": {
+            "type": "string",
+            "description": "Home / away / neutral venue",
+            "enum": [
+              "HOME",
+              "AWAY",
+              "NEUTRAL"
+            ],
+            "default": "HOME"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-text meta (meeting time, kit colour, …)",
+            "example": "Treffen 14:15"
+          },
+          "status": {
+            "type": "string",
+            "description": "Event status; set to CANCELLED to cancel the game",
+            "enum": [
+              "SCHEDULED",
+              "CANCELLED"
+            ]
+          }
+        }
+      },
+      "CastVoteDto": {
+        "type": "object",
+        "properties": {
+          "choice": {
+            "type": "string",
+            "description": "The caller's availability for this game",
+            "enum": [
+              "YES",
+              "NO"
+            ],
+            "example": "YES"
+          }
+        },
+        "required": [
+          "choice"
+        ]
+      },
+      "TeammateVoteDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Id of the voting user",
+            "example": "cmrf55tba0000wftfb78qh894"
+          },
+          "userName": {
+            "type": "string",
+            "description": "Display name of the voter (for avatars / initials)",
+            "example": "Max Mustermann",
+            "nullable": true
+          },
+          "choice": {
+            "type": "string",
+            "description": "The vote",
+            "enum": [
+              "YES",
+              "NO"
+            ]
+          }
+        },
+        "required": [
+          "userId",
+          "userName",
+          "choice"
+        ]
+      },
+      "EventVotesDto": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "Id of the event",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "votes": {
+            "description": "Teammates' votes for this event",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeammateVoteDto"
+            }
+          },
+          "summary": {
+            "description": "Vote tally + caller vote",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteSummaryDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "eventId",
+          "votes",
+          "summary"
+        ]
+      },
+      "MyUpcomingTeamDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Team id",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "name": {
+            "type": "string",
+            "description": "Team name",
+            "example": "Herren 1"
+          },
+          "sport": {
+            "type": "string",
+            "description": "Sport of the team",
+            "example": "Tennis"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "sport"
+        ]
+      },
+      "MyUpcomingEventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event id",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "Id of the team the event belongs to",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Kickoff time (UTC)",
+            "example": "2026-09-12T13:00:00.000Z"
+          },
+          "opponent": {
+            "type": "string",
+            "description": "Opponent",
+            "example": "SV Musterhausen"
+          },
+          "location": {
+            "type": "string",
+            "description": "Venue / address",
+            "example": "Sportplatz Gündlkofen",
+            "nullable": true
+          },
+          "homeAway": {
+            "type": "string",
+            "description": "Home / away / neutral",
+            "enum": [
+              "HOME",
+              "AWAY",
+              "NEUTRAL"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-text meta",
+            "example": "Treffen 14:15",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Event status",
+            "enum": [
+              "SCHEDULED",
+              "CANCELLED"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "How the event was created",
+            "enum": [
+              "MANUAL",
+              "IMPORT"
+            ]
+          },
+          "summary": {
+            "description": "Vote tally + caller vote",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VoteSummaryDto"
+              }
+            ]
+          },
+          "team": {
+            "description": "The team this game belongs to",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MyUpcomingTeamDto"
+              }
+            ]
+          },
+          "clubId": {
+            "type": "string",
+            "description": "Id of the club the team belongs to",
+            "example": "cmrf55tba0000wftfb78qh894"
+          }
+        },
+        "required": [
+          "id",
+          "teamId",
+          "startsAt",
+          "opponent",
+          "location",
+          "homeAway",
+          "notes",
+          "status",
+          "source",
+          "summary",
+          "team",
+          "clubId"
         ]
       }
     }

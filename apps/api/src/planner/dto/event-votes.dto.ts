@@ -35,6 +35,9 @@ export class EventVotesDto {
   })
   votes: TeammateVoteDto[];
 
-  @ApiProperty({ description: 'Vote tally + caller vote', type: VoteSummaryDto })
+  @ApiProperty({
+    description: 'Vote tally + caller vote',
+    type: VoteSummaryDto,
+  })
   summary: VoteSummaryDto;
 }

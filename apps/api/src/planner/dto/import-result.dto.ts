@@ -45,9 +45,16 @@ export class ImportResultDto {
   })
   skipped: number;
 
-  @ApiProperty({ description: 'Number of rows that failed validation', example: 0 })
+  @ApiProperty({
+    description: 'Number of rows that failed validation',
+    example: 0,
+  })
   errorCount: number;
 
-  @ApiProperty({ description: 'Per-row errors', type: ImportRowErrorDto, isArray: true })
+  @ApiProperty({
+    description: 'Per-row errors',
+    type: ImportRowErrorDto,
+    isArray: true,
+  })
   errors: ImportRowErrorDto[];
 }

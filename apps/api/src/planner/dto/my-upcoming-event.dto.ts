@@ -15,7 +15,10 @@ export class MyUpcomingTeamDto {
 }
 
 export class MyUpcomingEventDto extends EventDto {
-  @ApiProperty({ description: 'The team this game belongs to', type: MyUpcomingTeamDto })
+  @ApiProperty({
+    description: 'The team this game belongs to',
+    type: MyUpcomingTeamDto,
+  })
   team: MyUpcomingTeamDto;
 
   @ApiProperty({
