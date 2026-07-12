@@ -178,6 +178,26 @@ describe('CaslAbilityFactory', () => {
         false,
       );
     });
+
+    it('can moderate (delete any) chat in its club but not another club', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const chatA = { teamId: 'team-a1', team: { clubId: 'club-a' } };
+      const chatB = { teamId: 'team-b1', team: { clubId: 'club-b' } };
+      expect(ability.can('read', toSubject('ChatMessage', chatA))).toBe(true);
+      expect(
+        ability.can(
+          'delete',
+          toSubject('ChatMessage', { ...chatA, authorId: 'x' }),
+        ),
+      ).toBe(true);
+      expect(
+        ability.can(
+          'delete',
+          toSubject('ChatMessage', { ...chatB, authorId: 'x' }),
+        ),
+      ).toBe(false);
+    });
   });
 
   describe('member of club A', () => {
@@ -258,6 +278,16 @@ describe('CaslAbilityFactory', () => {
         false,
       );
       expect(ability.can('create', toSubject('Invitation', invitationA))).toBe(
+        false,
+      );
+    });
+
+    it('has no chat access — chat is team-scoped, not club-wide', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const chatA = { teamId: 'team-a1', team: { clubId: 'club-a' } };
+      expect(ability.can('read', toSubject('ChatMessage', chatA))).toBe(false);
+      expect(ability.can('create', toSubject('ChatMessage', chatA))).toBe(
         false,
       );
     });
@@ -343,6 +373,27 @@ describe('CaslAbilityFactory', () => {
           toSubject('Vote', { event: { teamId: 'team-a1' } }),
         ),
       ).toBe(true);
+    });
+
+    it('moderates (deletes any) chat of its own team only', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const ownTeamChat = {
+        teamId: 'team-a1',
+        team: { clubId: 'club-a' },
+        authorId: 'someone-else',
+      };
+      const otherTeamChat = {
+        teamId: 'team-a2',
+        team: { clubId: 'club-a' },
+        authorId: 'someone-else',
+      };
+      expect(ability.can('delete', toSubject('ChatMessage', ownTeamChat))).toBe(
+        true,
+      );
+      expect(
+        ability.can('delete', toSubject('ChatMessage', otherTeamChat)),
+      ).toBe(false);
     });
   });
 
@@ -438,6 +489,40 @@ describe('CaslAbilityFactory', () => {
       ).toBe(true);
       expect(
         ability.can('update', toSubject('Vote', { userId: 'user-2' })),
+      ).toBe(false);
+    });
+
+    it('reads and posts chat in own team, deletes only own messages', async () => {
+      const ability = await factory.createForUser(makeUser());
+
+      const teamChat = { teamId: 'team-a1', team: { clubId: 'club-a' } };
+      expect(ability.can('read', toSubject('ChatMessage', teamChat))).toBe(
+        true,
+      );
+      expect(ability.can('create', toSubject('ChatMessage', teamChat))).toBe(
+        true,
+      );
+      expect(
+        ability.can(
+          'delete',
+          toSubject('ChatMessage', { ...teamChat, authorId: 'user-1' }),
+        ),
+      ).toBe(true);
+      expect(
+        ability.can(
+          'delete',
+          toSubject('ChatMessage', { ...teamChat, authorId: 'user-2' }),
+        ),
+      ).toBe(false);
+      // A sibling team they are not on: no chat access.
+      expect(
+        ability.can(
+          'read',
+          toSubject('ChatMessage', {
+            teamId: 'team-a2',
+            team: { clubId: 'club-a' },
+          }),
+        ),
       ).toBe(false);
     });
   });

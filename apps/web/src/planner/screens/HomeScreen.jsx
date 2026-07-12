@@ -4,6 +4,7 @@ import { useMeControllerUpcomingEvents } from '@guendlkofen/api-client'
 import { dayKey, formatDayHeading } from '../lib'
 import { EventCard } from '../components/EventCard'
 import { EmptyState, ErrorState, LoadingState } from '../components/States'
+import { PushSetup } from '../PushSetup'
 
 /** Group a sorted event array into [{ key, label, events }] by local day. */
 function groupByDay(events, lang) {
@@ -32,6 +33,7 @@ export function HomeScreen() {
     return (
       <Stack>
         <Title order={2}>{t('planner.myGames.title')}</Title>
+        <PushSetup />
         <EmptyState message={t('planner.empty.upcoming')} />
       </Stack>
     )
@@ -42,6 +44,7 @@ export function HomeScreen() {
   return (
     <Stack gap="lg">
       <Title order={2}>{t('planner.myGames.title')}</Title>
+      <PushSetup />
       {groups.map((group) => (
         <Stack key={group.key} gap="sm">
           <Box

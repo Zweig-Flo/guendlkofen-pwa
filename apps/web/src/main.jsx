@@ -12,8 +12,20 @@ import './index.css'
 import './i18n/index.js'
 import ApiProvider from './ApiProvider.jsx'
 import App from './App.jsx'
+import { setupQueryPersistence } from './queryPersist.js'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Keep fetched data around long enough to rehydrate from the persisted
+      // localStorage cache on the next launch / offline.
+      gcTime: 1000 * 60 * 60 * 24,
+    },
+  },
+})
+
+// Persist the query cache to localStorage so planner reads work offline.
+setupQueryPersistence(queryClient)
 
 // Mobile-first Mantine theme: green primary (club colours), comfortable base
 // font size and rounded corners for touch-friendly cards/buttons.

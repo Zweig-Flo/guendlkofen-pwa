@@ -11,6 +11,18 @@
     "home": "Start",
     "teams": "Teams"
   },
+  "push": {
+    "title": "Benachrichtigungen",
+    "body": "Lass dich vor Spielen erinnern, abzustimmen – direkt aufs Handy.",
+    "enable": "Benachrichtigungen aktivieren",
+    "enabled": "Benachrichtigungen aktiviert",
+    "disabled": "Benachrichtigungen deaktiviert",
+    "active": "Benachrichtigungen sind aktiv.",
+    "disableLabel": "Benachrichtigungen deaktivieren",
+    "denied": "Benachrichtigungen sind im Browser blockiert. Bitte in den Einstellungen erlauben.",
+    "failed": "Benachrichtigungen konnten nicht eingerichtet werden.",
+    "iosHint": "Füge die App zum Home-Bildschirm hinzu (Teilen-Symbol → „Zum Home-Bildschirm“), um Benachrichtigungen zu erhalten."
+  },
   "common": {
     "save": "Speichern",
     "cancel": "Abbrechen",

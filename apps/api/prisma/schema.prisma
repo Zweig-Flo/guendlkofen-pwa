@@ -48,6 +48,12 @@ enum VoteChoice {
   NO
 }
 
+enum ReminderKind {
+  VOTE_7D
+  VOTE_2D
+  INFO_1D
+}
+
 model User {
   id           String  @id @default(cuid())
   auth0Sub     String  @unique
@@ -61,8 +67,13 @@ model User {
 
   votes Vote[]
 
+  pushSubscriptions PushSubscription[]
+  reminderLogs      ReminderLog[]
+
   sentInvitations     Invitation[] @relation("InvitedBy")
   acceptedInvitations Invitation[] @relation("AcceptedBy")
+
+  chatMessages ChatMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,6 +104,8 @@ model Team {
   memberships TeamMembership[]
 
   events Event[]
+
+  chatMessages ChatMessage[]
 
   invitationAssignments InvitationTeamAssignment[]
 
@@ -179,7 +192,8 @@ model Event {
   // Dedupe key for idempotent re-import. Null for manual events. Unique per team.
   importKey String?
 
-  votes Vote[]
+  votes        Vote[]
+  reminderLogs ReminderLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -201,4 +215,54 @@ model Vote {
 
   @@unique([eventId, userId]) // one vote per user per event; also the upsert key
   @@index([eventId]) // tally teammates' votes for one event
+}
+
+// A single team-chat message. `content` stores the AES-256-GCM ciphertext
+// (packed `v1:iv:tag:data`, all base64) — never plaintext. History outlives the
+// author account (SetNull, same reasoning as invitations); it dies with the team.
+model ChatMessage {
+  id       String  @id @default(cuid())
+  teamId   String
+  team     Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  content  String
+
+  createdAt DateTime @default(now())
+
+  @@index([teamId, createdAt]) // cursor pagination: newest-first per team
+}
+
+// A Web Push endpoint for one device. Endpoint is globally unique and
+// device-bound: re-subscribing on a device that another user previously used
+// MOVES the endpoint to the current user (deletes are always self-scoped).
+model PushSubscription {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  endpoint  String  @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// Idempotency ledger: one row per (event, user, reminder kind) so a given
+// reminder is sent at most once even across concurrent scheduler ticks.
+model ReminderLog {
+  id      String @id @default(cuid())
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  kind   ReminderKind
+  sentAt DateTime     @default(now())
+
+  @@unique([eventId, userId, kind])
 }

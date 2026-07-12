@@ -745,6 +745,65 @@ export interface MyUpcomingEventDto {
   clubId: string;
 }
 
+export interface PushPublicKeyDto {
+  /** VAPID public key (URL-safe base64) for pushManager.subscribe. Empty string when push is not configured on the server. */
+  publicKey: string;
+}
+
+export interface PushSubscriptionKeysDto {
+  /** The subscription's P-256 ECDH public key (base64url) */
+  p256dh: string;
+  /** The subscription auth secret (base64url) */
+  auth: string;
+}
+
+export interface CreatePushSubscriptionDto {
+  /** The push service endpoint URL (globally unique per device) */
+  endpoint: string;
+  keys: PushSubscriptionKeysDto;
+  /** Optional user-agent string of the subscribing device */
+  userAgent?: string;
+}
+
+export interface DeletePushSubscriptionDto {
+  /** The push service endpoint URL to remove */
+  endpoint: string;
+}
+
+export interface ChatMessageDto {
+  /** Message id */
+  id: string;
+  /** Id of the team the message belongs to */
+  teamId: string;
+  /**
+     * Author, or null if the account was deleted
+     * @nullable
+     */
+  author: MemberUserDto | null;
+  /** Decrypted message text */
+  content: string;
+  /** When the message was sent (UTC) */
+  createdAt: string;
+}
+
+export interface ChatMessagePageDto {
+  /** Messages, newest first */
+  messages: ChatMessageDto[];
+  /**
+     * Cursor to pass as `cursor` to fetch the next (older) page, or null if this is the last page
+     * @nullable
+     */
+  nextCursor: string | null;
+}
+
+export interface SendMessageDto {
+  /**
+     * Message text (plain UTF-8; encrypted server-side at rest)
+     * @maxLength 2000
+     */
+  content: string;
+}
+
 export type InvitationsControllerPreviewParams = {
 token: string;
 };
@@ -789,5 +848,18 @@ export type MeControllerUpcomingEventsParams = {
  * @maximum 90
  */
 days?: number;
+};
+
+export type ChatMessagesControllerListParams = {
+/**
+ * Return messages older than the message with this id (for upward infinite scroll)
+ */
+cursor?: string;
+/**
+ * Page size
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
 };
 

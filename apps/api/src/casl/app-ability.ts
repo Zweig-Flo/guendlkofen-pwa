@@ -1,6 +1,7 @@
 import { Ability, subject } from '@casl/ability';
 import type { PrismaQueryOf, Subjects } from '@casl/prisma/runtime';
 import type {
+  ChatMessage,
   Club,
   ClubMembership,
   Event,
@@ -26,6 +27,7 @@ export type AppSubjects =
       Invitation: Invitation;
       Event: Event;
       Vote: Vote;
+      ChatMessage: ChatMessage;
     }>;
 
 export type SubjectName = Extract<AppSubjects, string>;

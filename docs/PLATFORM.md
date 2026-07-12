@@ -31,8 +31,12 @@ whether they can play.
   up with.
 - **InvitationTeamAssignment** — join row on an Invitation pre-assigning the invitee to a
   specific team with a `TeamRole`; applied as TeamMemberships on redeem.
-- **ChatMessage** — per-team chat. Encrypted **at rest** + TLS in transit (deliberate
-  decision: no end-to-end encryption).
+- **ChatMessage** — per-team chat. **Sent over REST, received over WebSocket**; bodies are
+  **AES-256-GCM encrypted at rest** (`CHAT_ENCRYPTION_KEY`) + TLS in transit (deliberate
+  decision: no end-to-end encryption). **No edits.** Deletes are **hard** — a member deletes
+  their own, a team admin moderates any in the team. **Push-only** notifications (no email) go
+  to members without an active socket, throttled to once per user+team per 5 minutes. Ephemeral
+  **typing indicator** over the socket; no message retention limit.
 - **HelpRequest** — a team admin asks a **lower-ranked team of the same sport in the same
   club** for players for a specific event. Targets get push/email and respond.
 - **PushSubscription** — Web Push endpoints per user/device.
@@ -64,8 +68,14 @@ Rule of thumb: a role can grant its own level to others within its scope.
 
 - **Web Push first, email fallback** (users without push permission; heavyweight events
   like invites and help requests always also get email).
-- Planner flow: upcoming game → notification with vote actions; voted "no" → no further
-  reminders for that game.
+- **Game reminder schedule** (hourly `@Cron`, idempotent via `ReminderLog`):
+  - **7 days before** kickoff — vote nudge to members who have **not voted**.
+  - **2 days before** kickoff — second vote nudge to members who **still have not voted**.
+  - **1 day before** kickoff — info reminder to members who voted **YES**.
+  - Members who voted **NO** are **never re-notified** for that game.
+- **Push tap opens the event page** — notifications carry a deep-link `url`; the service
+  worker focuses/opens it on click. There are **no vote buttons in the notification** in v1;
+  voting happens on the event page.
 
 ## i18n
 
@@ -89,10 +99,16 @@ Rule of thumb: a role can grant its own level to others within its scope.
 | Decision                       | Choice                                    | Why                                        |
 | ------------------------------ | ----------------------------------------- | ------------------------------------------ |
 | Distribution                   | PWA                                       | No app-store fees                          |
-| Chat encryption                | TLS + at-rest, **not** E2E                | E2E complexity not worth it for v1         |
+| Chat encryption                | TLS + AES-256-GCM at-rest, **not** E2E    | E2E complexity not worth it for v1         |
+| Chat transport                 | **REST send / WebSocket receive**         | Simple, reliable writes; live fan-out to sockets |
+| Chat notifications             | **Push only, no email**; 5-min per user+team throttle, only to members without an active socket | Chat is high-volume/low-stakes; avoid email spam and notifying active viewers |
+| Chat edit/delete               | **No edit; hard delete** (own message, or team-admin moderation) | Keep it simple; no edit-history complexity, real deletion |
 | Vote options                   | Yes/No only                               | Force a decision                           |
 | Rank & help scope              | Same club + same sport, lower rank only   | Matches real league substitution rules     |
 | Notifications                  | Web Push + email fallback                 | Reach users without push permission        |
+| Reminder schedule              | 7d + 2d vote nudges for non-voters, 1d info for YES-voters, never for NO-voters | Chase undecided members, confirm attendees, don't nag decliners |
+| Notification tap               | Opens the event page; **no** vote buttons in the notification (v1) | Simpler SW; voting stays on one canonical surface |
+| Offline scope                  | App shell + cached reads only (no queued offline mutations) | Read planner data offline; avoid stale/conflicting offline votes |
 | Permissions                    | CASL                                      | Fine-grained, works on API + can share to UI |
 | API client                     | Orval (OpenAPI → React Query hooks)       | Generated hooks, no hand-written fetchers  |
 | Languages                      | de (primary), en; extensible              | German club, international later           |

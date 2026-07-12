@@ -1803,6 +1803,290 @@
           "planner"
         ]
       }
+    },
+    "/me/push/public-key": {
+      "get": {
+        "operationId": "PushController_getPublicKey",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushPublicKeyDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
+    "/me/push-subscriptions": {
+      "post": {
+        "operationId": "PushController_subscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePushSubscriptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Subscription stored."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "notifications"
+        ]
+      },
+      "delete": {
+        "operationId": "PushController_unsubscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePushSubscriptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Subscription removed (or absent)."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/messages": {
+      "get": {
+        "operationId": "ChatMessagesController_list",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Return messages older than the message with this id (for upward infinite scroll)",
+            "schema": {
+              "example": "cmrf55tba0005wftfb78qh899",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessagePageDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "chat"
+        ]
+      },
+      "post": {
+        "operationId": "ChatMessagesController_send",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "chat"
+        ]
+      }
+    },
+    "/clubs/{clubId}/teams/{teamId}/messages/{messageId}": {
+      "delete": {
+        "operationId": "ChatMessagesController_remove",
+        "parameters": [
+          {
+            "name": "clubId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teamId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "chat"
+        ]
+      }
     }
   },
   "info": {
@@ -3025,6 +3309,149 @@
           "summary",
           "team",
           "clubId"
+        ]
+      },
+      "PushPublicKeyDto": {
+        "type": "object",
+        "properties": {
+          "publicKey": {
+            "type": "string",
+            "description": "VAPID public key (URL-safe base64) for pushManager.subscribe. Empty string when push is not configured on the server.",
+            "example": "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkTjq1..."
+          }
+        },
+        "required": [
+          "publicKey"
+        ]
+      },
+      "PushSubscriptionKeysDto": {
+        "type": "object",
+        "properties": {
+          "p256dh": {
+            "type": "string",
+            "description": "The subscription's P-256 ECDH public key (base64url)"
+          },
+          "auth": {
+            "type": "string",
+            "description": "The subscription auth secret (base64url)"
+          }
+        },
+        "required": [
+          "p256dh",
+          "auth"
+        ]
+      },
+      "CreatePushSubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "description": "The push service endpoint URL (globally unique per device)",
+            "example": "https://fcm.googleapis.com/fcm/send/abc123"
+          },
+          "keys": {
+            "$ref": "#/components/schemas/PushSubscriptionKeysDto"
+          },
+          "userAgent": {
+            "type": "string",
+            "description": "Optional user-agent string of the subscribing device"
+          }
+        },
+        "required": [
+          "endpoint",
+          "keys"
+        ]
+      },
+      "DeletePushSubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "description": "The push service endpoint URL to remove",
+            "example": "https://fcm.googleapis.com/fcm/send/abc123"
+          }
+        },
+        "required": [
+          "endpoint"
+        ]
+      },
+      "ChatMessageDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Message id",
+            "example": "cmrf55tba0005wftfb78qh899"
+          },
+          "teamId": {
+            "type": "string",
+            "description": "Id of the team the message belongs to",
+            "example": "cmrf55tba0001wftfb78qh895"
+          },
+          "author": {
+            "description": "Author, or null if the account was deleted",
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MemberUserDto"
+              }
+            ]
+          },
+          "content": {
+            "type": "string",
+            "description": "Decrypted message text",
+            "example": "Wer bringt am Samstag die Bälle mit?"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the message was sent (UTC)",
+            "example": "2026-09-12T13:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "teamId",
+          "author",
+          "content",
+          "createdAt"
+        ]
+      },
+      "ChatMessagePageDto": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "description": "Messages, newest first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessageDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Cursor to pass as `cursor` to fetch the next (older) page, or null if this is the last page",
+            "example": "cmrf55tba0005wftfb78qh899",
+            "nullable": true
+          }
+        },
+        "required": [
+          "messages",
+          "nextCursor"
+        ]
+      },
+      "SendMessageDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Message text (plain UTF-8; encrypted server-side at rest)",
+            "example": "Wer bringt am Samstag die Bälle mit?",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "content"
         ]
       }
     }

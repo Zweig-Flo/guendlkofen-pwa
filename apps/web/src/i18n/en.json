@@ -11,6 +11,18 @@
     "home": "Home",
     "teams": "Teams"
   },
+  "push": {
+    "title": "Notifications",
+    "body": "Get a reminder to vote before your games — right on your phone.",
+    "enable": "Enable notifications",
+    "enabled": "Notifications enabled",
+    "disabled": "Notifications disabled",
+    "active": "Notifications are on.",
+    "disableLabel": "Disable notifications",
+    "denied": "Notifications are blocked in your browser. Please allow them in settings.",
+    "failed": "Could not set up notifications.",
+    "iosHint": "Add the app to your home screen (Share icon → \"Add to Home Screen\") to receive notifications."
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",

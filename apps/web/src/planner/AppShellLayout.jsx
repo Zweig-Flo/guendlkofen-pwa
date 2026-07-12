@@ -1,7 +1,10 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useQueryClient } from '@tanstack/react-query'
 import { ActionIcon, Box, Container, Group, Text } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
+import { clearPersistedCache } from '../queryPersist.js'
+import { unsubscribeFromPush } from './push'
 
 const NAV = [
   { to: '/', key: 'nav.home', icon: '🏠', exact: true },
@@ -22,7 +25,20 @@ export function AppShellLayout() {
   const { t } = useTranslation()
   const { logout } = useAuth0()
   const { pathname } = useLocation()
+  const queryClient = useQueryClient()
   const BOTTOM_NAV_H = 60
+
+  // On logout: drop this device's push subscription and wipe the cached
+  // personal data before Auth0 redirects away (shared-device hygiene).
+  const handleLogout = async () => {
+    try {
+      await unsubscribeFromPush()
+    } catch {
+      // ignore — proceed with logout regardless.
+    }
+    clearPersistedCache(queryClient)
+    logout({ logoutParams: { returnTo: window.location.origin } })
+  }
 
   return (
     <Box style={{ textAlign: 'left', minHeight: '100svh' }}>
@@ -45,9 +61,7 @@ export function AppShellLayout() {
               variant="subtle"
               size="lg"
               aria-label={t('auth.logout')}
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
+              onClick={handleLogout}
             >
               ⏻
             </ActionIcon>

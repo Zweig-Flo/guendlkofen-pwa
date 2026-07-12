@@ -66,6 +66,12 @@ export class CaslAbilityFactory {
       });
       // A player only ever writes their own vote row.
       can('manage', 'Vote', { userId: user.id });
+
+      // Team members read and post chat in their teams. Deleting is stricter:
+      // only your own messages (moderation for admins is added below).
+      can('read', 'ChatMessage', { teamId: { in: memberTeamIds } });
+      can('create', 'ChatMessage', { teamId: { in: memberTeamIds } });
+      can('delete', 'ChatMessage', { authorId: user.id });
     }
 
     const adminClubIds = clubMemberships
@@ -88,6 +94,10 @@ export class CaslAbilityFactory {
       can('read', 'Vote', {
         event: { is: { team: { is: { clubId: { in: adminClubIds } } } } },
       });
+      // Club admins moderate (read + delete any) chat across their club's teams.
+      can('manage', 'ChatMessage', {
+        team: { is: { clubId: { in: adminClubIds } } },
+      });
     }
 
     const adminTeamIds = teamMemberships
@@ -103,6 +113,8 @@ export class CaslAbilityFactory {
       can('read', 'Vote', {
         event: { is: { teamId: { in: adminTeamIds } } },
       });
+      // Team admins moderate (read + delete any) chat of their teams.
+      can('manage', 'ChatMessage', { teamId: { in: adminTeamIds } });
     }
 
     return build();

@@ -25,14 +25,19 @@ import type {
 
 import type {
   CastVoteDto,
+  ChatMessageDto,
+  ChatMessagePageDto,
+  ChatMessagesControllerListParams,
   ClubDto,
   ClubMembershipDto,
   CreateClubDto,
   CreateClubMemberDto,
   CreateEventDto,
   CreateInvitationDto,
+  CreatePushSubscriptionDto,
   CreateTeamDto,
   CreateTeamMemberDto,
+  DeletePushSubscriptionDto,
   EventDetailDto,
   EventDto,
   EventVotesDto,
@@ -45,7 +50,9 @@ import type {
   MeControllerUpcomingEventsParams,
   MessageDto,
   MyUpcomingEventDto,
+  PushPublicKeyDto,
   RedeemInvitationDto,
+  SendMessageDto,
   TeamDto,
   TeamMembershipDto,
   UpdateClubDto,
@@ -2931,4 +2938,484 @@ export function useMeControllerUpcomingEvents<TData = Awaited<ReturnType<typeof 
 
 
 
+
+export const getPushControllerGetPublicKeyUrl = () => {
+
+
+
+
+  return `/me/push/public-key`
+}
+
+export const pushControllerGetPublicKey = async ( options?: RequestInit): Promise<PushPublicKeyDto> => {
+
+  return customFetch<PushPublicKeyDto>(getPushControllerGetPublicKeyUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getPushControllerGetPublicKeyQueryKey = () => {
+    return [
+    `/me/push/public-key`
+    ] as const;
+    }
+
+
+export const getPushControllerGetPublicKeyQueryOptions = <TData = Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPushControllerGetPublicKeyQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof pushControllerGetPublicKey>>> = ({ signal }) => pushControllerGetPublicKey({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type PushControllerGetPublicKeyQueryResult = NonNullable<Awaited<ReturnType<typeof pushControllerGetPublicKey>>>
+export type PushControllerGetPublicKeyQueryError = unknown
+
+
+export function usePushControllerGetPublicKey<TData = Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof pushControllerGetPublicKey>>,
+          TError,
+          Awaited<ReturnType<typeof pushControllerGetPublicKey>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePushControllerGetPublicKey<TData = Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof pushControllerGetPublicKey>>,
+          TError,
+          Awaited<ReturnType<typeof pushControllerGetPublicKey>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function usePushControllerGetPublicKey<TData = Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function usePushControllerGetPublicKey<TData = Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pushControllerGetPublicKey>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getPushControllerGetPublicKeyQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getPushControllerSubscribeUrl = () => {
+
+
+
+
+  return `/me/push-subscriptions`
+}
+
+export const pushControllerSubscribe = async (createPushSubscriptionDto: CreatePushSubscriptionDto, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getPushControllerSubscribeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createPushSubscriptionDto)
+  }
+);}
+
+
+
+
+
+export const getPushControllerSubscribeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pushControllerSubscribe>>, TError,{data: CreatePushSubscriptionDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pushControllerSubscribe>>, TError,{data: CreatePushSubscriptionDto}, TContext> => {
+
+const mutationKey = ['pushControllerSubscribe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pushControllerSubscribe>>, {data: CreatePushSubscriptionDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pushControllerSubscribe(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PushControllerSubscribeMutationResult = NonNullable<Awaited<ReturnType<typeof pushControllerSubscribe>>>
+    export type PushControllerSubscribeMutationBody = CreatePushSubscriptionDto
+    export type PushControllerSubscribeMutationError = unknown
+
+    export const usePushControllerSubscribe = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pushControllerSubscribe>>, TError,{data: CreatePushSubscriptionDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof pushControllerSubscribe>>,
+        TError,
+        {data: CreatePushSubscriptionDto},
+        TContext
+      > => {
+      return useMutation(getPushControllerSubscribeMutationOptions(options), queryClient);
+    }
+
+export const getPushControllerUnsubscribeUrl = () => {
+
+
+
+
+  return `/me/push-subscriptions`
+}
+
+export const pushControllerUnsubscribe = async (deletePushSubscriptionDto: DeletePushSubscriptionDto, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getPushControllerUnsubscribeUrl(),
+  {
+    ...options,
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(deletePushSubscriptionDto)
+  }
+);}
+
+
+
+
+
+export const getPushControllerUnsubscribeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pushControllerUnsubscribe>>, TError,{data: DeletePushSubscriptionDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof pushControllerUnsubscribe>>, TError,{data: DeletePushSubscriptionDto}, TContext> => {
+
+const mutationKey = ['pushControllerUnsubscribe'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pushControllerUnsubscribe>>, {data: DeletePushSubscriptionDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pushControllerUnsubscribe(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PushControllerUnsubscribeMutationResult = NonNullable<Awaited<ReturnType<typeof pushControllerUnsubscribe>>>
+    export type PushControllerUnsubscribeMutationBody = DeletePushSubscriptionDto
+    export type PushControllerUnsubscribeMutationError = unknown
+
+    export const usePushControllerUnsubscribe = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pushControllerUnsubscribe>>, TError,{data: DeletePushSubscriptionDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof pushControllerUnsubscribe>>,
+        TError,
+        {data: DeletePushSubscriptionDto},
+        TContext
+      > => {
+      return useMutation(getPushControllerUnsubscribeMutationOptions(options), queryClient);
+    }
+
+export const getChatMessagesControllerListUrl = (clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/clubs/${clubId}/teams/${teamId}/messages?${stringifiedParams}` : `/clubs/${clubId}/teams/${teamId}/messages`
+}
+
+export const chatMessagesControllerList = async (clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams, options?: RequestInit): Promise<ChatMessagePageDto> => {
+
+  return customFetch<ChatMessagePageDto>(getChatMessagesControllerListUrl(clubId,teamId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getChatMessagesControllerListQueryKey = (clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams,) => {
+    return [
+    `/clubs/${clubId}/teams/${teamId}/messages`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getChatMessagesControllerListQueryOptions = <TData = Awaited<ReturnType<typeof chatMessagesControllerList>>, TError = unknown>(clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof chatMessagesControllerList>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getChatMessagesControllerListQueryKey(clubId,teamId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof chatMessagesControllerList>>> = ({ signal }) => chatMessagesControllerList(clubId,teamId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clubId !== null && clubId !== undefined && teamId !== null && teamId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof chatMessagesControllerList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ChatMessagesControllerListQueryResult = NonNullable<Awaited<ReturnType<typeof chatMessagesControllerList>>>
+export type ChatMessagesControllerListQueryError = unknown
+
+
+export function useChatMessagesControllerList<TData = Awaited<ReturnType<typeof chatMessagesControllerList>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params: undefined |  ChatMessagesControllerListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof chatMessagesControllerList>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof chatMessagesControllerList>>,
+          TError,
+          Awaited<ReturnType<typeof chatMessagesControllerList>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useChatMessagesControllerList<TData = Awaited<ReturnType<typeof chatMessagesControllerList>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof chatMessagesControllerList>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof chatMessagesControllerList>>,
+          TError,
+          Awaited<ReturnType<typeof chatMessagesControllerList>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useChatMessagesControllerList<TData = Awaited<ReturnType<typeof chatMessagesControllerList>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof chatMessagesControllerList>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useChatMessagesControllerList<TData = Awaited<ReturnType<typeof chatMessagesControllerList>>, TError = unknown>(
+ clubId: string,
+    teamId: string,
+    params?: ChatMessagesControllerListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof chatMessagesControllerList>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getChatMessagesControllerListQueryOptions(clubId,teamId,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getChatMessagesControllerSendUrl = (clubId: string,
+    teamId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/messages`
+}
+
+export const chatMessagesControllerSend = async (clubId: string,
+    teamId: string,
+    sendMessageDto: SendMessageDto, options?: RequestInit): Promise<ChatMessageDto> => {
+
+  return customFetch<ChatMessageDto>(getChatMessagesControllerSendUrl(clubId,teamId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(sendMessageDto)
+  }
+);}
+
+
+
+
+
+export const getChatMessagesControllerSendMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatMessagesControllerSend>>, TError,{clubId: string;teamId: string;data: SendMessageDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof chatMessagesControllerSend>>, TError,{clubId: string;teamId: string;data: SendMessageDto}, TContext> => {
+
+const mutationKey = ['chatMessagesControllerSend'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof chatMessagesControllerSend>>, {clubId: string;teamId: string;data: SendMessageDto}> = (props) => {
+          const {clubId,teamId,data} = props ?? {};
+
+          return  chatMessagesControllerSend(clubId,teamId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChatMessagesControllerSendMutationResult = NonNullable<Awaited<ReturnType<typeof chatMessagesControllerSend>>>
+    export type ChatMessagesControllerSendMutationBody = SendMessageDto
+    export type ChatMessagesControllerSendMutationError = unknown
+
+    export const useChatMessagesControllerSend = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatMessagesControllerSend>>, TError,{clubId: string;teamId: string;data: SendMessageDto}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof chatMessagesControllerSend>>,
+        TError,
+        {clubId: string;teamId: string;data: SendMessageDto},
+        TContext
+      > => {
+      return useMutation(getChatMessagesControllerSendMutationOptions(options), queryClient);
+    }
+
+export const getChatMessagesControllerRemoveUrl = (clubId: string,
+    teamId: string,
+    messageId: string,) => {
+
+
+
+
+  return `/clubs/${clubId}/teams/${teamId}/messages/${messageId}`
+}
+
+export const chatMessagesControllerRemove = async (clubId: string,
+    teamId: string,
+    messageId: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getChatMessagesControllerRemoveUrl(clubId,teamId,messageId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getChatMessagesControllerRemoveMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatMessagesControllerRemove>>, TError,{clubId: string;teamId: string;messageId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof chatMessagesControllerRemove>>, TError,{clubId: string;teamId: string;messageId: string}, TContext> => {
+
+const mutationKey = ['chatMessagesControllerRemove'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof chatMessagesControllerRemove>>, {clubId: string;teamId: string;messageId: string}> = (props) => {
+          const {clubId,teamId,messageId} = props ?? {};
+
+          return  chatMessagesControllerRemove(clubId,teamId,messageId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChatMessagesControllerRemoveMutationResult = NonNullable<Awaited<ReturnType<typeof chatMessagesControllerRemove>>>
+
+    export type ChatMessagesControllerRemoveMutationError = unknown
+
+    export const useChatMessagesControllerRemove = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatMessagesControllerRemove>>, TError,{clubId: string;teamId: string;messageId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof chatMessagesControllerRemove>>,
+        TError,
+        {clubId: string;teamId: string;messageId: string},
+        TContext
+      > => {
+      return useMutation(getChatMessagesControllerRemoveMutationOptions(options), queryClient);
+    }
 
